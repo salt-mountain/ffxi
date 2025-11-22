@@ -172,7 +172,9 @@ function get_sets()
 
     -- Your idle set
     sets.me.idle.refresh = {
-
+        ammo="Homiliary",
+        left_ring="Stikini Ring +1",
+        right_ring="Stikini Ring +1",
     }
 
     -- Your idle Sublimation set combine from refresh or DT depening on mode.
@@ -181,7 +183,9 @@ function get_sets()
     })   
     -- Your idle DT set
     sets.me.idle.dt = set_combine(sets.me.idle[refreshType],{
-
+        ammo="Staunch Tathlum +1",
+        left_ring="Shneddick Ring",
+        right_ring="Warp Ring",
     })  
     sets.me.idle.mdt = set_combine(sets.me.idle[refreshType],{
 
@@ -218,8 +222,8 @@ function get_sets()
     sets.buff['Immanence'] = {hands="Arbatel Bracers +1"}
     sets.buff['Penury'] = {legs="Arbatel Pants +1"}
     sets.buff['Parsimony'] = {legs="Arbatel Pants +1"}
-    sets.buff['Celerity'] = {feet="Peda. Loafers +3"}
-    sets.buff['Alacrity'] = {feet="Peda. Loafers +3"}
+    sets.buff['Celerity'] = {feet="Peda. Loafers +2"}
+    sets.buff['Alacrity'] = {feet="Peda. Loafers +2"}
     sets.buff['Klimaform'] = {feet="Arbatel Loafers +1"}	
     -- Ebulience set empy now as we get better damage out of a good Merlinic head
     sets.buff['Ebullience'] = {} -- I left it there still if it becomes needed so the SCH.lua file won't need modification should you want to use this set
@@ -250,7 +254,7 @@ function get_sets()
         legs={ name="Psycloth Lappas", augments={'MP+80','Mag. Acc.+15','"Fast Cast"+7',}},
         feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
         neck="Nodens Gorget",
-        waist="Witful Belt",
+        waist="Embla Sash",
         left_ear="Mendi. Earring",
         right_ear="Loquac. Earring",
         left_ring="Mephitas's Ring +1",
@@ -290,8 +294,8 @@ function get_sets()
     ---------------------
 
     sets.precast["Tabula Rasa"] = {legs="Pedagogy Pants +1"}
-    sets.precast["Enlightenment"] = {body="Peda. Gown +3"}	 
-    sets.precast["Sublimation"] = {head="Acad. Mortar. +1", body="Peda. Gown +3"}	 
+    sets.precast["Enlightenment"] = {body="Peda. Gown +2"}	 
+    sets.precast["Sublimation"] = {head="Acad. Mortar. +2", body="Peda. Gown +2"}	 
 
 	
 	----------
@@ -338,20 +342,20 @@ function get_sets()
 
     }
 
-	sets.midcast["Sublimation"] = {head="Acad. Mortar. +1", body="Peda. Gown +3"}
+	sets.midcast["Sublimation"] = {head="Acad. Mortar. +2", body="Peda. Gown +2"}
     
     sets.midcast.nuking.normal = {
         main="Marin Staff +1",
         sub="Khonsu",
-        ammo="Staunch Tathlum +1",
+        ammo="Hydrocera",
         head="Jhakri Coronal +2",
         body="Jhakri Robe +2",
         hands="Jhakri Cuffs +2",
         legs="Jhakri Slops +2",
         feet="Jhakri Pigaches +2",
-        neck="Erra Pendant",
+        neck="Mizukage-no-Kubikazari",
         waist="Witful Belt",
-        left_ear="Mendi. Earring",
+        left_ear="Halasz Earring",
         right_ear="Magnetic Earring",
         left_ring="Stikini Ring +1",
         right_ring="Stikini Ring +1",
@@ -360,11 +364,15 @@ function get_sets()
     -- used with toggle, default: F10
     -- Pieces to swap from freen nuke to Magic Burst
     sets.midcast.MB.normal = set_combine(sets.midcast.nuking.normal, {
-
+        head="Peda. M.Board +2",
+        neck="Mizukage-no-Kubikazari",
+        right_ring="Jhakri Ring",
     })
 	
     sets.midcast.nuking.acc = {
-
+        head="Peda. M.Board +2",
+        neck="Mizukage-no-Kubikazari",
+        right_ring="Jhakri Ring",
     }
     -- used with toggle, default: F10
     -- Pieces to swap from freen nuke to Magic Burst
@@ -377,15 +385,15 @@ function get_sets()
 
 	}	
     sets.midcast.IntEnfeebling = {
-
+        hands="Peda. Bracers +2",
     }
     sets.midcast.MndEnfeebling = {
-
+        hands="Peda. Bracers +2",
     }
 	
     -- Enhancing
     sets.midcast.enhancing = set_combine(sets.midcast.casting,{
-        waist="Embla sash",
+        waist="Embla Sash",
 
     })
     sets.midcast.storm = set_combine(sets.midcast.enhancing,{
@@ -402,7 +410,8 @@ function get_sets()
 	
     sets.midcast["Drain"] = set_combine(sets.midcast.nuking, {
 		--head="Pixie Hairpin +1",
-		--neck="Erra Pendant",
+        legs="Peda. Pants +2",
+		neck="Erra Pendant",
     })
     sets.midcast["Aspir"] = sets.midcast["Drain"]
  	
@@ -436,7 +445,9 @@ function get_sets()
 	sets.midcast.regen = {} 	-- leave this empty
 	-- Normal hybrid well rounded Regen
     sets.midcast.regen.hybrid = {
-
+        head="Arbatel Bonnet",
+        body="Peda. Gown +2",
+        waist="Embla Sash",
     }
 	-- Focus on Regen Duration 	
     sets.midcast.regen.duration = set_combine(sets.midcast.regen.hybrid,{
