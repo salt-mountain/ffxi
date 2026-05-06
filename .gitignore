@@ -1,0 +1,27 @@
+# XIPivot — large binary DAT graphical asset packs, not source
+XIPivot/
+
+# OS junk
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+._*
+
+# Editor / backup / temp
+*.bak
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+.claude/
+
+# Compiled Lua
+luac.out
+*.luac
+
+# Logs
+*.log

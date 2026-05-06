@@ -1,0 +1,17 @@
+sets.exported = {
+    main="Tauret",
+    sub="Sandung",
+    ammo="Aurgelmir Orb",
+    head="Adhemar Bonnet +1",
+    body="Mummu Jacket +2",
+    hands="Mummu Wrists +2",
+    legs="Meg. Chausses +2",
+    feet="Mummu Gamash. +2",
+    neck="Chivalrous Chain",
+    waist="Patentia Sash",
+    left_ear="Brutal Earring",
+    right_ear="Mache Earring +1",
+    left_ring="Shneddick Ring",
+    right_ring="Warp Ring",
+    back={ name="Mecisto. Mantle", augments={'Cap. Point+30%','HP+25','Rng.Acc.+1','DEF+8',}},
+}

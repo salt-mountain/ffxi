@@ -1,0 +1,305 @@
+<?xml version="1.1" ?>
+<settings>
+    <global>
+        <auto>true</auto>
+        <language>English</language>
+        <sets>
+            <aatank>
+                <1>Apururu (UC)</1>
+                <2>AAEV</2>
+                <3>Koru-Moru</3>
+                <4>Shantotto II</4>
+                <5>Semih Lafihna</5>
+            </aatank>
+            <abyss>
+                <1>Apururu (UC)</1>
+                <2>Cherukiki</2>
+                <3>Ulmia</3>
+                <4>Joachim</4>
+                <5>Koru-Moru</5>
+            </abyss>
+            <ambu>
+                <1>Apururu (UC)</1>
+                <2>Valaineral</2>
+                <3>Ulmia</3>
+                <4>Shantotto II</4>
+                <5>Arciela II</5>
+            </ambu>
+            <ambu2>
+                <1>Apururu (UC)</1>
+                <2>Valaineral</2>
+                <3>Koru-Moru</3>
+                <4>Ulmia</4>
+                <5>Qultada</5>
+            </ambu2>
+            <ambu3>
+                <1>Apururu (UC)</1>
+                <2>Valaineral</2>
+                <3>Koru-Moru</3>
+                <4>Ulmia</4>
+                <5>Shantotto II</5>
+            </ambu3>
+            <ambuplusone>
+                <1>AAEV</1>
+                <2>Apururu (UC)</2>
+                <3>Ulmia</3>
+                <4>Koru-Moru</4>
+            </ambuplusone>
+            <benambu>
+                <1>Apururu (UC)</1>
+                <2>August</2>
+                <3>Ulmia</3>
+                <4>Koru-Moru</4>
+            </benambu>
+            <blulvl>
+                <1>Amchuchu</1>
+                <2>Apururu (UC)</2>
+                <3>Koru-Moru</3>
+                <4>Ferreous Coffin</4>
+                <5>Cornelia</5>
+            </blulvl>
+            <cap>
+                <1>Cornelia</1>
+                <2>Apururu (UC)</2>
+                <3>Koru-Moru</3>
+                <4>August</4>
+                <5>Kupofried</5>
+            </cap>
+            <currentambu>
+                <1>Apururu (UC)</1>
+                <2>Valaineral</2>
+                <3>Koru-Moru</3>
+                <4>Ulmia</4>
+                <5>Noillurie</5>
+            </currentambu>
+            <default>
+                <1>Valaineral</1>
+                <2>Mihli Aliapoh</2>
+                <3>Tenzen</3>
+                <4>Adelheid</4>
+                <5>Joachim</5>
+            </default>
+            <di>
+                <1>Apururu (UC)</1>
+                <2>Selh&apos;teus</2>
+                <3>Ulmia</3>
+                <4>King of Hearts</4>
+                <5>Lilisette II</5>
+            </di>
+            <dnc>
+                <1>Apururu (UC)</1>
+                <2>Valaineral</2>
+                <3>Shantotto II</3>
+                <4>Iroha II</4>
+                <5>Kupofried</5>
+            </dnc>
+            <dyna>
+                <1>Apururu (UC)</1>
+                <2>Valaineral</2>
+                <3>Shantotto II</3>
+                <4>Koru-Moru</4>
+                <5>Semih Lafihna</5>
+            </dyna>
+            <eddie>
+                <1>August</1>
+                <2>Cornelia</2>
+                <3>Koru-Moru</3>
+                <4>Apururu (UC)</4>
+            </eddie>
+            <fp2>
+                <1>Apururu (UC)</1>
+                <2>Selh&apos;teus</2>
+                <3>Valaineral</3>
+                <4>Shantotto II</4>
+                <5>Arciela II</5>
+            </fp2>
+            <fullparty>
+                <1>Apururu (UC)</1>
+                <2>Selh&apos;teus</2>
+                <3>Valaineral</3>
+                <4>Koru-Moru</4>
+                <5>Shantotto II</5>
+            </fullparty>
+            <healing>
+                <1>Sakura</1>
+                <2>Moogle</2>
+                <3>Balamor</3>
+            </healing>
+            <leetanking>
+                <1>Apururu (UC)</1>
+                <2>Shantotto II</2>
+                <3>Koru-Moru</3>
+            </leetanking>
+            <leveling>
+                <1>Kupofried</1>
+                <2>Kuyin Hathdenna</2>
+                <3>Sakura</3>
+                <4>Brygid</4>
+                <5>Apururu (UC)</5>
+            </leveling>
+            <lil>
+                <1>August</1>
+                <2>Cornelia</2>
+                <3>Koru-Moru</3>
+                <4>Apururu (UC)</4>
+                <5>Mihli Aliapoh</5>
+            </lil>
+            <lil2>
+                <1>Amchuchu</1>
+                <2>Cornelia</2>
+                <3>King of Hearts</3>
+                <4>Ferreous Coffin</4>
+                <5>Apururu (UC)</5>
+            </lil2>
+            <lil3>
+                <1>Cornelia</1>
+                <2>Joachim</2>
+                <3>King of Hearts</3>
+                <4>Ferreous Coffin</4>
+                <5>Apururu (UC)</5>
+            </lil3>
+            <lil5>
+                <1>Amchuchu</1>
+                <2>Cornelia</2>
+                <3>Selh&apos;teus</3>
+                <4>Koru-Moru</4>
+                <5>Apururu (UC)</5>
+            </lil5>
+            <lilith>
+                <1>August</1>
+                <2>Valaineral</2>
+                <3>Ulmia</3>
+                <4>Koru-Moru</4>
+                <5>Kupipi</5>
+            </lilith>
+            <mages>
+                <1>Yoran-Oran (UC)</1>
+                <2>Koru-Moru</2>
+                <3>Shantotto II</3>
+            </mages>
+            <main1>
+                <1>Valaineral</1>
+                <2>Yoran-Oran (UC)</2>
+                <3>Shantotto II</3>
+                <4>Lilisette II</4>
+                <5>Lion II</5>
+            </main1>
+            <odinleveling>
+                <1>Valaineral</1>
+                <2>Kupipi</2>
+                <3>Maximilian</3>
+            </odinleveling>
+            <omen>
+                <1>August</1>
+                <2>Ayame</2>
+                <3>Koru-Moru</3>
+                <4>Apururu (UC)</4>
+            </omen>
+            <organ>
+                <1>Apururu (UC)</1>
+                <2>August</2>
+                <3>Shantotto II</3>
+                <4>Koru-Moru</4>
+                <5>Iroha II</5>
+            </organ>
+            <rua>
+                <1>Apururu (UC)</1>
+                <2>AAEV</2>
+                <3>King of Hearts</3>
+                <4>Prishe</4>
+            </rua>
+            <rua2>
+                <1>Apururu (UC)</1>
+                <2>King of Hearts</2>
+                <3>August</3>
+                <4>Ulmia</4>
+            </rua2>
+            <rua3>
+                <1>Apururu (UC)</1>
+                <2>August</2>
+                <3>Ulmia</3>
+                <4>Arciela II</4>
+            </rua3>
+            <sch>
+                <1>Apururu (UC)</1>
+                <2>Valaineral</2>
+                <3>Koru-Moru</3>
+                <4>Shantotto II</4>
+                <5>Semih Lafihna</5>
+            </sch>
+            <schultz>
+                <1>Apururu (UC)</1>
+                <2>Valaineral</2>
+                <3>Koru-Moru</3>
+                <4>Shantotto II</4>
+                <5>Semih Lafihna</5>
+            </schultz>
+            <skillup>
+                <1>Moogle</1>
+                <2>Ulmia</2>
+                <3>Sakura</3>
+                <4>Balamor</4>
+            </skillup>
+            <solo>
+                <1>Apururu (UC)</1>
+                <2>Shantotto II</2>
+                <3>Kupofried</3>
+                <4>Sakura</4>
+                <5>Kuyin Hathdenna</5>
+            </solo>
+            <tenzen>
+                <1>Apururu (UC)</1>
+                <2>AAEV</2>
+                <3>Uka Totlihn</3>
+                <4>Koru-Moru</4>
+                <5>Shantotto II</5>
+            </tenzen>
+            <thf>
+                <1>Apururu (UC)</1>
+                <2>Valaineral</2>
+                <3>Shantotto II</3>
+                <4>Koru-Moru</4>
+                <5>Iroha II</5>
+            </thf>
+            <weaponskill>
+                <1>Koru-Moru</1>
+                <2>Apururu (UC)</2>
+                <3>Moogle</3>
+                <4>Sakura</4>
+            </weaponskill>
+            <ws>
+                <1>Apururu (UC)</1>
+                <2>Ayame</2>
+                <3>Koru-Moru</3>
+                <4>Valaineral</4>
+                <5>Kuyin Hathdenna</5>
+            </ws>
+            <xp>
+                <1>Apururu (UC)</1>
+                <2>Valaineral</2>
+                <3>Shantotto II</3>
+                <4>Koru-Moru</4>
+                <5>Semih Lafihna</5>
+            </xp>
+            <xp2>
+                <1>Yoran-Oran (UC)</1>
+                <2>Valaineral</2>
+                <3>Shantotto II</3>
+                <4>Koru-Moru</4>
+                <5>Semih Lafihna</5>
+            </xp2>
+            <xppassive>
+                <1>Apururu (UC)</1>
+                <2>Kupofried</2>
+                <3>Star Sibyl</3>
+                <4>Sakura</4>
+                <5>Kuyin Hathdenna</5>
+            </xppassive>
+        </sets>
+        <wait>
+            <aftercast>3</aftercast>
+            <retr>1.25</retr>
+            <retrall>3</retrall>
+        </wait>
+    </global>
+</settings>

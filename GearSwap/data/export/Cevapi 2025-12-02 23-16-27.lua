@@ -1,0 +1,17 @@
+sets.exported = {
+    main="Tauret",
+    sub="Sandung",
+    ammo="Aurgelmir Orb",
+    head={ name="Adhemar Bonnet +1", augments={'STR+12','DEX+12','Attack+20',}},
+    body="Mummu Jacket +2",
+    hands="Mummu Wrists +2",
+    legs={ name="Lustr. Subligar +1", augments={'Accuracy+20','DEX+8','Crit. hit rate+3%',}},
+    feet="Mummu Gamash. +2",
+    neck="Chivalrous Chain",
+    waist="Patentia Sash",
+    left_ear="Moonshade Earring",
+    right_ear="Mache Earring +1",
+    left_ring="Shneddick Ring",
+    right_ring="Warp Ring",
+    back={ name="Toutatis's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+}
