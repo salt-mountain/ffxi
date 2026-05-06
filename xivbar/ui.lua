@@ -100,9 +100,9 @@ function ui:position(theme_options)
     self.mp_bar:width(0)
     self.tp_bar:width(0)
 
-    self.hp_text:pos(x + 65 + theme_options.text_offset, self.background:pos_y() + 2)
-    self.mp_text:pos(x + 80 + theme_options.text_offset + theme_options.bar_width + theme_options.bar_spacing, self.background:pos_y() + 2)
-    self.tp_text:pos(x + 90 + theme_options.text_offset + (theme_options.bar_width*2) + (theme_options.bar_spacing*2), self.background:pos_y() + 2)
+    self.hp_text:pos(x + 65 + theme_options.text_offset, self.background:pos_y() + 7)
+    self.mp_text:pos(x + 80 + theme_options.text_offset + theme_options.bar_width + theme_options.bar_spacing, self.background:pos_y() + 7)
+    self.tp_text:pos(x + 90 + theme_options.text_offset + (theme_options.bar_width*2) + (theme_options.bar_spacing*2), self.background:pos_y() + 7)
 end
 
 -- hide ui

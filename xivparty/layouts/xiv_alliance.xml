@@ -222,7 +222,7 @@
                 <txtName>
                     <color>#F0FFFFFF</color>
                     <enabled>true</enabled>
-                    <font>Arial</font>
+                    <font>Grammara</font>
                     <pos>41,1</pos>
                     <size>8</size>
                     <snapToRaster>true</snapToRaster>
@@ -235,7 +235,7 @@
                     <alignRight>false</alignRight>
                     <color>#F0FFFFFF</color>
                     <enabled>true</enabled>
-                    <font>Arial</font>
+                    <font>Grammara</font>
                     <pos>8,18</pos>
                     <short>true</short>
                     <size>9</size>

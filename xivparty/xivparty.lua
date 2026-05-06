@@ -26,7 +26,7 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ]]
 
-_addon.name = 'XivParty'
+_addon.name = 'xivparty'
 _addon.author = 'Tylas'
 _addon.version = '2.2.0'
 _addon.commands = {'xp', 'xivparty'}

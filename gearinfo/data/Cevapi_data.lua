@@ -3731,5 +3731,236 @@ return {
             [21]="GEO", 
             [22]="RUN"
         }
+    }, 
+    [126]={
+        ["discription"]="Cannot Equip Footgear DEF:2 Movement speed +8%", 
+        ["DEF"]=2, 
+        ["slots"]={
+            [7]="Legs"
+        }, 
+        ["en"]="Track Pants +1", 
+        ["id"]=27326, 
+        ["category"]="Armor", 
+        ["jobs"]={
+            [1]="WAR", 
+            [2]="MNK", 
+            [3]="WHM", 
+            [4]="BLM", 
+            [5]="RDM", 
+            [6]="THF", 
+            [7]="PLD", 
+            [8]="DRK", 
+            [9]="BST", 
+            [10]="BRD", 
+            [11]="RNG", 
+            [12]="SAM", 
+            [13]="NIN", 
+            [14]="DRG", 
+            [15]="SMN", 
+            [16]="BLU", 
+            [17]="COR", 
+            [18]="PUP", 
+            [19]="DNC", 
+            [20]="SCH", 
+            [21]="GEO", 
+            [22]="RUN"
+        }
+    }, 
+    [127]={
+        ["discription"]="DEF:2 Latent effect (under Lv.31): Acc.+50 Rng. Acc.+50 Mag. Acc.+50 Ability to appreciate Gysahl Greens Initiate and below: Likelihood of synthesis material loss -1% Dispense: Crystals", 
+        ["jobs"]={
+            [1]="WAR", 
+            [2]="MNK", 
+            [3]="WHM", 
+            [4]="BLM", 
+            [5]="RDM", 
+            [6]="THF", 
+            [7]="PLD", 
+            [8]="DRK", 
+            [9]="BST", 
+            [10]="BRD", 
+            [11]="RNG", 
+            [12]="SAM", 
+            [13]="NIN", 
+            [14]="DRG", 
+            [15]="SMN", 
+            [16]="BLU", 
+            [17]="COR", 
+            [18]="PUP", 
+            [19]="DNC", 
+            [20]="SCH", 
+            [21]="GEO", 
+            [22]="RUN"
+        }, 
+        ["Ranged Accuracy"]=50, 
+        ["category"]="Armor", 
+        ["en"]="Chocobo Shirt", 
+        ["slots"]={
+            [5]="Body"
+        }, 
+        ["id"]=10293, 
+        ["DEF"]=2, 
+        ["Accuracy"]=50, 
+        ["Magic Accuracy"]=50
+    }, 
+    [128]={
+        ["discription"]="DEF:7 Enchantment: Costume Latent effect (Lv.30 and below): Adds \"Regen\" and \"Refresh\" effects Auto-Reraise Increases skill gain rate Increases movement speed", 
+        ["DEF"]=7, 
+        ["slots"]={
+            [4]="Head"
+        }, 
+        ["en"]="Destrier Beret", 
+        ["id"]=11811, 
+        ["category"]="Armor", 
+        ["jobs"]={
+            [1]="WAR", 
+            [2]="MNK", 
+            [3]="WHM", 
+            [4]="BLM", 
+            [5]="RDM", 
+            [6]="THF", 
+            [7]="PLD", 
+            [8]="DRK", 
+            [9]="BST", 
+            [10]="BRD", 
+            [11]="RNG", 
+            [12]="SAM", 
+            [13]="NIN", 
+            [14]="DRG", 
+            [15]="SMN", 
+            [16]="BLU", 
+            [17]="COR", 
+            [18]="PUP", 
+            [19]="DNC", 
+            [20]="SCH", 
+            [21]="GEO", 
+            [22]="RUN"
+        }
+    }, 
+    [129]={
+        ["discription"]="DMG:5 Delay:257", 
+        ["en"]="Ash Club +1", 
+        ["skill"]="Club", 
+        ["delay"]=257, 
+        ["category"]="Weapon", 
+        ["slots"]={
+            [0]="Main", 
+            [1]="Sub"
+        }, 
+        ["jobs"]={
+            [1]="WAR", 
+            [2]="MNK", 
+            [3]="WHM", 
+            [4]="BLM", 
+            [5]="RDM", 
+            [6]="THF", 
+            [7]="PLD", 
+            [8]="DRK", 
+            [9]="BST", 
+            [10]="BRD", 
+            [11]="RNG", 
+            [12]="SAM", 
+            [13]="NIN", 
+            [14]="DRG", 
+            [15]="SMN", 
+            [16]="BLU", 
+            [17]="COR", 
+            [18]="PUP", 
+            [19]="DNC", 
+            [20]="SCH", 
+            [21]="GEO", 
+            [22]="RUN"
+        }, 
+        ["id"]=17137, 
+        ["damage"]=5
+    }, 
+    [130]={
+        ["discription"]="Experience point bonus: +150% Maximum duration: 720 min. Maximum bonus: 30000", 
+        ["id"]=27556, 
+        ["slots"]={
+            [13]="Left Ring", 
+            [14]="Right Ring"
+        }, 
+        ["en"]="Echad Ring", 
+        ["category"]="Armor", 
+        ["jobs"]={
+            [1]="WAR", 
+            [2]="MNK", 
+            [3]="WHM", 
+            [4]="BLM", 
+            [5]="RDM", 
+            [6]="THF", 
+            [7]="PLD", 
+            [8]="DRK", 
+            [9]="BST", 
+            [10]="BRD", 
+            [11]="RNG", 
+            [12]="SAM", 
+            [13]="NIN", 
+            [14]="DRG", 
+            [15]="SMN", 
+            [16]="BLU", 
+            [17]="COR", 
+            [18]="PUP", 
+            [19]="DNC", 
+            [20]="SCH", 
+            [21]="GEO", 
+            [22]="RUN"
+        }
+    }, 
+    [131]={
+        ["discription"]="DEF:2 Haste+3% \"Store TP\"+5 Enchantment: TP+3000", 
+        ["category"]="Armor", 
+        ["en"]="Prishe's Boots +1", 
+        ["Store TP"]=5, 
+        ["jobs"]={
+            [1]="WAR", 
+            [2]="MNK", 
+            [3]="WHM", 
+            [4]="BLM", 
+            [5]="RDM", 
+            [6]="THF", 
+            [7]="PLD", 
+            [8]="DRK", 
+            [9]="BST", 
+            [10]="BRD", 
+            [11]="RNG", 
+            [12]="SAM", 
+            [13]="NIN", 
+            [14]="DRG", 
+            [15]="SMN", 
+            [16]="BLU", 
+            [17]="COR", 
+            [18]="PUP", 
+            [19]="DNC", 
+            [20]="SCH", 
+            [21]="GEO", 
+            [22]="RUN"
+        }, 
+        ["DEF"]=2, 
+        ["slots"]={
+            [8]="Feet"
+        }, 
+        ["id"]=24271, 
+        ["Haste"]=3
+    }, 
+    [132]={
+        ["discription"]="DMG:24 Delay:300  Additional effect: Light damage", 
+        ["en"]="Holy Mace", 
+        ["skill"]="Club", 
+        ["delay"]=300, 
+        ["category"]="Weapon", 
+        ["slots"]={
+            [0]="Main", 
+            [1]="Sub"
+        }, 
+        ["jobs"]={
+            [1]="WAR", 
+            [3]="WHM", 
+            [7]="PLD", 
+            [21]="GEO"
+        }, 
+        ["id"]=17041, 
+        ["damage"]=24
     }
 }
