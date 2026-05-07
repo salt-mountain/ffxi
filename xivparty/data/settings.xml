@@ -50,4 +50,29 @@
             <scale>1,1</scale>
         </party>
     </cevapi>
+    <rizzler>
+        <alliance1>
+            <pos>0.8671875,0.5277777</pos>
+            <scale>1,1</scale>
+        </alliance1>
+        <alliance2>
+            <pos>0.8671875,0.5972222</pos>
+            <scale>1,1</scale>
+        </alliance2>
+        <party>
+            <pos>0.015625,0.4791666</pos>
+            <scale>1,1</scale>
+        </party>
+    </rizzler>
+    <saltmountain>
+        <alliance1>
+            <scale>1,1</scale>
+        </alliance1>
+        <alliance2>
+            <scale>1,1</scale>
+        </alliance2>
+        <party>
+            <scale>1,1</scale>
+        </party>
+    </saltmountain>
 </settings>
