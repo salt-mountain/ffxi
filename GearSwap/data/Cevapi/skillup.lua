@@ -9,7 +9,7 @@ res = require 'resources'
 user_settings = {
     user_spells = {
         Healing = T{'Cure', 'Cure II'},
-        Geomancy = T{},
+        Geomancy = T{'Indi-Poison', 'Indi-Voidance'},
         Enhancing = T{},
         Ninjutsu = T{},
         Singing = T{},
@@ -26,6 +26,7 @@ sets.Idle = {
     --head="Tema. Headband",
     body="Temachtiani Shirt",
     hands="Temachtiani Gloves",
+    range="Matre bell",
     --legs="Temachtiani Pants",
     --feet="Temachtiani Boots",
     }
@@ -72,7 +73,7 @@ function status_change(new,old)
             send_command('wait 1.0;input /ma "'..gs_skill.skillup_spells[gs_skill.skillup_count]..'" <me>')
         end
     elseif new=='Resting' then
-        coroutine.schedule(go_to_idle_gear, 30)
+        -- coroutine.schedule(go_to_idle_gear, 30)  -- disabled: was swapping out of Resting gear mid-rest, slowing MP regen
     end
 end
 function go_to_idle_gear()
@@ -521,7 +522,7 @@ windower.raw_register_event('incoming chunk', function(id, data, modified, injec
         updatedisplay()
     end
     if id == 0x0DF and skilluprun then
-        if data:unpack('I', 0x0D) == player.max_mp and skilluprun then
+        if data:unpack('I', 0x0D) >= player.max_mp and skilluprun then
             windower.send_command('input /heal off')
         end
     end
