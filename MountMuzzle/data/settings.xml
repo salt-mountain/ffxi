@@ -6,4 +6,7 @@
         </custom>
         <muzzle>silent</muzzle>
     </global>
+    <cevapi>
+        <muzzle>zone</muzzle>
+    </cevapi>
 </settings>
