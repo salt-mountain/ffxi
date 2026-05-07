@@ -590,5 +590,10 @@ windower.raw_register_event('prerender',function()
     if frame_count%30 == 0 and window:visible() then
         updatedisplay()
     end
+    -- polling fallback: 0x0DF packet sometimes stops broadcasting once MP plateaus at max,
+    -- which would leave the script stuck resting. Poll every ~5s as a safety net.
+    if frame_count%300 == 0 and skilluprun and player.status == 'Resting' and player.mp >= player.max_mp then
+        windower.send_command('input /heal off')
+    end
     frame_count = frame_count + 1
 end)
