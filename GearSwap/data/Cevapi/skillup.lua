@@ -22,11 +22,12 @@ sets.brd = {
     string_inst = {
         range="Lamia Harp"},}--put your string instrument here
 sets.Idle = {
+    main={ name="Solstice", augments={'Mag. Acc.+20','Pet: Damage taken -4%','"Fast Cast"+5',}},
     --right_ear="Liminus Earring",
     --head="Tema. Headband",
     body="Temachtiani Shirt",
     hands="Temachtiani Gloves",
-    range="Matre bell",
+    range="Dunna",
     --legs="Temachtiani Pants",
     --feet="Temachtiani Boots",
     }
@@ -64,15 +65,31 @@ function file_unload()
     window:destroy()
     button:destroy()
 end
+function skillup_log(msg)
+    windower.add_to_chat(207, '[skillup] '..msg)
+end
 function status_change(new,old)
     if sets[new] then
         equip(sets[new])
     end
     if new=='Idle' then
+        if rest_start_time and skilluprun then
+            local elapsed = os.clock() - rest_start_time
+            local p = windower.ffxi.get_player()
+            local live_mp = (p and p.vitals) and (p.vitals.mp..'/'..p.vitals.max_mp) or '?'
+            skillup_log(string.format('stood up after %.1fs (live MP %s)', elapsed, live_mp))
+        end
+        rest_start_time = nil
         if skilluprun then
             send_command('wait 1.0;input /ma "'..gs_skill.skillup_spells[gs_skill.skillup_count]..'" <me>')
         end
     elseif new=='Resting' then
+        rest_start_time = os.clock()
+        if skilluprun then
+            local p = windower.ffxi.get_player()
+            local live_mp = (p and p.vitals) and (p.vitals.mp..'/'..p.vitals.max_mp) or '?'
+            skillup_log(string.format('entered Rest. cached MP %d/%d, live MP %s', player.mp or -1, player.max_mp or -1, live_mp))
+        end
         -- coroutine.schedule(go_to_idle_gear, 30)  -- disabled: was swapping out of Resting gear mid-rest, slowing MP regen
     end
 end
@@ -161,6 +178,7 @@ function precast(spell)
         if gs_skillup.skipped_spells:contains(spell.name) then
             gs_skillup.skipped_spells:clear()
             cancel_spell()
+            skillup_log(string.format('insufficient MP for %s (need %d, have %d) — sending /heal on', spell.name, spell.mp_cost + 25, player.mp))
             send_command('input /heal on')
             return
         end
@@ -590,10 +608,23 @@ windower.raw_register_event('prerender',function()
     if frame_count%30 == 0 and window:visible() then
         updatedisplay()
     end
-    -- polling fallback: 0x0DF packet sometimes stops broadcasting once MP plateaus at max,
-    -- which would leave the script stuck resting. Poll every ~5s as a safety net.
-    if frame_count%300 == 0 and skilluprun and player.status == 'Resting' and player.mp >= player.max_mp then
-        windower.send_command('input /heal off')
+    -- polling fallback: 0x0DF packet (and gearswap's cached player.mp) can go stale once MP
+    -- plateaus, leaving the script stuck resting. Every ~5s, check live MP from get_player().
+    -- Watchdog: if resting > 2.5 minutes, force /heal off — full regen should never take that long.
+    if frame_count%300 == 0 and skilluprun and player.status == 'Resting' then
+        local p = windower.ffxi.get_player()
+        local live_mp = p and p.vitals and p.vitals.mp or -1
+        local live_max = p and p.vitals and p.vitals.max_mp or -1
+        local mp_full = live_mp >= live_max and live_max > 0
+        local elapsed = rest_start_time and (os.clock() - rest_start_time) or 0
+        local stuck = rest_start_time and elapsed > 150
+        skillup_log(string.format('resting check: live %d/%d, cached %d/%d, elapsed %.0fs, mp_full=%s, stuck=%s',
+            live_mp, live_max, player.mp or -1, player.max_mp or -1, elapsed, tostring(mp_full), tostring(stuck)))
+        if mp_full or stuck then
+            skillup_log(stuck and 'WATCHDOG fired — forcing /heal off after 2.5min' or 'MP full — sending /heal off')
+            windower.send_command('input /heal off')
+            rest_start_time = nil
+        end
     end
     frame_count = frame_count + 1
 end)
