@@ -1,6 +1,9 @@
 # XIPivot — large binary DAT graphical asset packs, not source
 XIPivot/
 
+# equipviewer — local cache of equipment icon BMPs (regenerates from gear use)
+equipviewer/icons/
+
 # OS junk
 Thumbs.db
 ehthumbs.db
