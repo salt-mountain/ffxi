@@ -28,3 +28,6 @@ luac.out
 
 # Logs
 *.log
+
+# GearSwap /gs export dumps — local inventory snapshots, regenerated on demand
+GearSwap/data/export/
