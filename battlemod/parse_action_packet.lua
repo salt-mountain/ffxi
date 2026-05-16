@@ -43,7 +43,9 @@ function parse_action_packet(act)
                 end
                 if not check_filter(act.actor,v.target[1],act.category,m.message) then
                     m.message = 0
-                    m.add_effect_message = 0
+                    if not preserve_filtered_add_effect(m.add_effect_message) then
+                        m.add_effect_message = 0
+                    end
                 end
                 if m.spike_effect_message ~= 0 and not check_filter(v.target[1],act.actor,act.category,m.message) then
                     m.spike_effect_message = 0
@@ -120,7 +122,9 @@ function parse_action_packet(act)
             
             if not check_filter(act.actor,v.target[1],act.category,tempact.message) then
                 tempact.message = 0
-                tempact.add_effect_message = 0
+                if not preserve_filtered_add_effect(tempact.add_effect_message) then
+                    tempact.add_effect_message = 0
+                end
             end
             if tempact.spike_effect_message ~= 0 and not check_filter(v.target[1],act.actor,act.category,tempact.message) then
                 tempact.spike_effect_message = 0

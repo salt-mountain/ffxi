@@ -9,7 +9,7 @@
      If the monster is the actor, then the inner tag is the target and the tag beyond that is the action.-->
     <global>
         <me> <!-- You're doing something -->
-            <melee>false</melee>  <!-- Prevents your melee ("white") damage from appearing -->
+            <melee>true</melee>   <!-- Hides your white hits AND crits (both are action category 1) -->
             <ranged>false</ranged> <!-- Prevents your ranged damage from appearing -->
             <damage>false</damage> <!-- Prevents your damage from appearing -->
             <healing>false</healing> <!-- Prevents your healing from appearing -->
@@ -22,7 +22,7 @@
             <target>true</target> <!-- true = SHOW all actions where I am the target. -->
         </me>
         <party> <!-- A party member is doing something -->
-            <melee>false</melee>
+            <melee>true</melee>
             <ranged>false</ranged>
             <damage>false</damage>
             <healing>false</healing>
@@ -48,16 +48,16 @@
             <target>false</target>
         </alliance>
         <others> <!-- Some guy nearby is doing something -->
-            <melee>false</melee>
-            <ranged>false</ranged>
-            <damage>false</damage>
-            <healing>false</healing>
-            <misses>false</misses>
-            <items>false</items>
-            <uses>false</uses>
-            <readies>false</readies>
-            <casting>false</casting>
-            <all>false</all>
+            <melee>true</melee>
+            <ranged>true</ranged>
+            <damage>true</damage>
+            <healing>true</healing>
+            <misses>true</misses>
+            <items>true</items>
+            <uses>true</uses>
+            <readies>true</readies>
+            <casting>true</casting>
+            <all>true</all>
             <target>false</target>
         </others>
         <my_pet> <!-- Your pet is doing something -->
@@ -132,16 +132,16 @@
                 <all>false</all>
             </alliance>
             <others> <!-- He's targeting some guy nearby -->
-                <melee>false</melee>
-                <ranged>false</ranged>
-                <damage>false</damage>
-                <healing>false</healing>
-                <misses>false</misses>
-                <items>false</items>
-                <uses>false</uses>
-                <readies>false</readies>
-                <casting>false</casting>
-                <all>false</all>
+                <melee>true</melee>
+                <ranged>true</ranged>
+                <damage>true</damage>
+                <healing>true</healing>
+                <misses>true</misses>
+                <items>true</items>
+                <uses>true</uses>
+                <readies>true</readies>
+                <casting>true</casting>
+                <all>true</all>
             </others>
             <my_pet> <!-- He's targeting your pet -->
                 <melee>false</melee>
@@ -243,16 +243,16 @@
                 <all>false</all>
             </alliance>
             <others> <!-- He's targeting some guy nearby -->
-                <melee>false</melee>
-                <ranged>false</ranged>
-                <damage>false</damage>
-                <healing>false</healing>
-                <misses>false</misses>
-                <items>false</items>
-                <uses>false</uses>
-                <readies>false</readies>
-                <casting>false</casting>
-                <all>false</all>
+                <melee>true</melee>
+                <ranged>true</ranged>
+                <damage>true</damage>
+                <healing>true</healing>
+                <misses>true</misses>
+                <items>true</items>
+                <uses>true</uses>
+                <readies>true</readies>
+                <casting>true</casting>
+                <all>true</all>
             </others>
             <my_pet> <!-- He's targeting your pet -->
                 <melee>false</melee>

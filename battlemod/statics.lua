@@ -278,6 +278,21 @@ message_map[369] = T{403} -- Ultimate Terror
 spike_effect_valid = {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false}
 add_effect_valid = {true,true,true,true,false,false,false,false,false,false,true,false,true,false,false}
 
+-- Additional-effect messages that should still print even when their parent
+-- action message is filtered. Without this, filtering <me><melee> hides white
+-- hits AND zeros m.add_effect_message at parse time (see parse_action_packet.lua
+-- where m.message = 0 / m.add_effect_message = 0 ride together), so TH procs,
+-- skillchains, Death procs, and Chainbound disappear with the swing they rode in on.
+function preserve_filtered_add_effect(ae_msg)
+    return ae_msg == 603       -- AE: Treasure Hunter
+        or ae_msg == 605       -- AE: additional effect (Death)
+        or ae_msg == 776       -- AE: Chainbound
+        or (ae_msg > 287 and ae_msg < 303)   -- Skillchain msgs 288-302
+        or (ae_msg > 384 and ae_msg < 399)   -- Skillchain msgs 385-398
+        or (ae_msg > 766 and ae_msg < 769)   -- Skillchain msgs 767-768
+        or (ae_msg > 768 and ae_msg < 771)   -- Skillchain msgs 769-770
+end
+
 -- These are the debuffs that are expressed in their log form by battlemod (The status variable when using english log is code 14 while the other one is code 13 so it should be handled by messages)
 --log_form_debuffs = T{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,28,29,30,31,134,135,155,156,157,168,176,177,259,260,261,262,263,264,309,474}
 log_form_messages = T{64,73,82,127,128,130,141,203,204,236,242,270,271,272,277,279,350,374,531,645,754}

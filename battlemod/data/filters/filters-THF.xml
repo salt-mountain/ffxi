@@ -9,7 +9,7 @@
 <settings>
     <global>
         <me> <!-- You're doing something -->
-            <melee>false</melee>
+            <melee>true</melee>
             <ranged>true</ranged>
             <damage>false</damage>
             <healing>false</healing>
