@@ -108,8 +108,9 @@ These are the upgrades that change *the most slots in the most sets* per unit of
 ### 16. Azimuth Tights +3 (Reforged Empyrean, Ruspix)
 - **Source**: RP path.
 - **Stats**: DEF:138, MAcc+63, MAB+58, MDmg+33, Dark skill+30, Haste+5%, **Magic Burst damage +15**
-- **Goes into**: `sets.midcast['Elemental Magic'].Burst` legs (replaces Nyame Flanchard's MBD+6).
-- **Why**: +15 MBD I — the single biggest MBD piece you can wear. Replaces Nyame Flanchard in burst legs.
+- **Goes into**: `sets.midcast['Elemental Magic'].Burst` legs (currently the +2 — Nyame Flanchard already displaced).
+- **Why**: +15 MBD I vs +10 on +2 = +5 MBD on burst; +5 MAB, +10 MDmg, +5 Dark skill, +10 MAcc.
+- **Current**: **Azimuth Tights +2 acquired 2026-05-18** and slotted in nuke / nuke.Resistant / Burst / Enfeebling Magic. Path forward = +3 RP upgrade.
 
 ### 17. Bagua Tunic +3 (Reforged Relic, Aurix)
 - **Source**: RP path. You now own **Bagua Tunic +2** (DEF:139, MAcc+30, MAB+56, Geomancy skill+14, Haste+3%, Enhances Bolster: +30s duration) — already slotted in `sets.midcast.Geomancy` and `sets.precast.JA["Bolster"]`.
@@ -141,11 +142,12 @@ These are the upgrades that change *the most slots in the most sets* per unit of
 - **Goes into**: Mainhand of every magic set. The Luopan DT-25% replaces 1/4 of all damage your luopan takes — irreplaceable.
 - **Note**: Until Idris, **Solstice Path D** is fine. Skip Idris unless committed to the multi-month grind.
 
-### 22. Daybreak (Aeonic Club)
+### 22. ~~Daybreak (Aeonic Club)~~ — **DONE** (acquired 2026-05-20)
 - **Source**: Reisenjima Aeonic weapon trial (Reisenjima BCNMs).
-- **Stats**: DMG:150, Delay:216, MP+60, MND+30, MAcc+40, MAB+40, **Cure potency +30%**, Refresh+1, Light dmg+50, main hand grants Dispelga.
-- **Goes into**: `sets.midcast.Cure` mainhand (Solstice → Daybreak: +30% Cure potency is the single biggest cure mainhand upgrade) AND nuke/MB clubs.
-- **Note**: Pairs with Genmei Shield for the +30% cure potency mage mainhand setup.
+- **Stats (BGWiki-verified 2026-05-20)**: DMG:150, Delay:216, MP+60, MND+30, MAcc+40, MAB+40, **Magic Damage+241**, Magic Evasion+30, Club/Parrying skill +228, Magic Accuracy skill +242, **Cure potency +30%**, Refresh+1, Light damage+50 (melee), main hand grants **Dispelga**.
+- **Slotted in**: `sets.midcast.Cure` (Curaga + Cursna inherit), `sets.midcast.Refresh`, `sets.midcast['Enfeebling Magic']` (Dark Magic / Drain / Aspir / Stun inherit), `sets.midcast['Elemental Magic']` (Helix inherits, Burst inherits via set_combine).
+- **NOT slotted in**: `sets.midcast.Geomancy` / `.Indi` — Solstice has **Handbell skill+5** (boosts Geo-* damage and Indi-* potency) and **Indicolure spell duration+15** as base stats; Daybreak has neither. Both are GEO-essential and not findable on any other club, so Solstice stays here regardless of Daybreak's raw MD/MAB/MAcc lead. `sets.idle` / `.Pet` / `.PDT` / `.PDT.Pet` (Solstice Path D's Pet:DT-4% is critical for luopan survival at idle). `sets.engaged` (aliases idle). `sets.precast.WS` (user not focused on WS).
+- **Note**: Pairs with Genmei Shield for the +30% Cure potency mage mainhand setup. Maxentius (Ambuscade) remains the BiS Burst club for the per-skillchain MB Bonus — Daybreak fills Burst until Maxentius.
 
 ### 23. Maxentius (Ambuscade Club)
 - **Source**: Ambuscade — high-tier reward (~10,000+ Hallmarks).
@@ -287,7 +289,7 @@ These are the upgrades that change *the most slots in the most sets* per unit of
 
 | Slot | Current | Best upgrade |
 |---|---|---|
-| main | Solstice | **Daybreak** (Cure potency +30%) — long-term |
+| main | **Daybreak** (Cure pot +30%, MND+30, MD+241, Refresh+1) — acquired 2026-05-20 | (no upgrade) |
 | sub | (placeholder) | **Sors Shield** (Cure pot +3%, Cure cast -5%) |
 | head | Vanya Hood (Path D — base Cure pot +10%) | Vanya Hood Path A would give +7% more Cure pot (re-augment via Reforging Trader) |
 | body | Vanya Robe (Path C) | Vanya Robe Path A would add +7% Cure pot |
@@ -330,13 +332,13 @@ These are the upgrades that change *the most slots in the most sets* per unit of
 
 | Slot | Current | Best upgrade |
 |---|---|---|
-| main | Solstice | Maxentius (Black Halo) or Daybreak (light staff alt) — both via Aeonic/Ambuscade |
+| main | **Daybreak** (MAB+40, MD+241, MAcc+40) — acquired 2026-05-20 | Maxentius (Black Halo + MB Bonus per SC step) — better for Burst long-term |
 | sub | (placeholder) | **Ammurapi Shield** (MAB+38, MAcc+38) |
 | ammo | Pemphredo Tathlum | keep |
 | head | Jhakri Coronal +2 (MAB+41) | Merlinic Hood (augmented MAB+40+) or Azimuth Hood +3 (geomancy crossover) |
 | body | Jhakri Robe +2 (MAB+43) | Azimuth Coat +3 (MAB+59 + Refresh+4) |
 | hands | Bagua Mitaines +2 (MAB+43) | **Bagua Mitaines +3** (MAB+50 + MBD+12) |
-| legs | Bagua Pants +2 (MAB+44) | Azimuth Tights +3 (MAB+58) or Merlinic Shalwar (augmented MAB+40+) |
+| legs | Azimuth Tights +2 (MAB+53, INT+50, MDmg+23) | Azimuth Tights +3 (MAB+58) or Merlinic Shalwar (augmented MAB+40+) |
 | feet | Bagua Sandals +2 (MAB+41) | Merlinic Crackows (augmented MAB+40+) |
 | neck | Bagua Charm +2 | keep (MAcc+30 is strong) |
 | waist | Embla Sash | Acuity Belt +1 (Sortie; +MAcc) for resistant casting |
@@ -353,7 +355,7 @@ These are the upgrades that change *the most slots in the most sets* per unit of
 | head | Nyame Helm (MBD+5, SC Bonus+5) | **Ea Hat +1** (MBD I+7, MBD II+7) — Smithing endgame |
 | body | Nyame Mail (MBD+7, SC Bonus+7) | **Ea Houppe. +1** (MBD I+9, MBD II+9) |
 | hands | Bagua Mitaines +2 (MBD+8) | **Bagua Mitaines +3** (MBD+12) — Refresh+2 bonus |
-| legs | Nyame Flanchard (MBD+6, SC Bonus+6) | **Azimuth Tights +3** (MBD+15) OR Ea Slops +1 (MBD I+8, MBD II+8) |
+| legs | Azimuth Tights +2 (MBD+10, MAB+53) | **Azimuth Tights +3** (MBD+15) OR Ea Slops +1 (MBD I+8, MBD II+8) |
 | feet | Jhakri Pigaches +2 (MBD+7) | **Ea Pigaches +1** (MBD I+5, MBD II+5) — only piece that fills MBD II in feet |
 | ring1 | Jhakri Ring (MBD+2) | keep |
 | ring2 | (Mujin Band TODO) | **Mujin Band** (MBD II+5, SC Bonus+5) — Dynamis Windurst from Naa Yixo |
@@ -366,7 +368,7 @@ These are the upgrades that change *the most slots in the most sets* per unit of
 | head | Bagua Galero +2 | Bagua Galero +3 (MAcc+46 vs +36) |
 | body | Azimuth Coat +1 | Azimuth Coat +3 (MAcc+64) |
 | hands | Azimuth Gloves +1 | Azimuth Gloves +3 (MAcc+62, Enfeebling skill+28) |
-| legs | Bagua Pants +2 | Bagua Pants +3 |
+| legs | Azimuth Tights +2 (MAcc+53, Dark skill+25) | Azimuth Tights +3 (MAcc+63) |
 | feet | Bagua Sandals +2 | **Bagua Sandals +3** (Enfeebling skill +21, MAcc+36) |
 | neck | Bagua Charm +2 | keep / Incanter's Torque alternative (all magic skills+10) |
 | waist | Acuity Belt +1 TODO | Acuity Belt +1 (Sortie) |
@@ -448,9 +450,24 @@ Layered on top of `sets.idle`. Your verified pet-survival pieces:
 
 ## By Source — where to grind
 
-### Reforged AF +3 (Coelestrox, Ethereal Ingress #10)
-Bagua and Geomancy +3 upgrades. Trade +2 piece + P. GEO Cards + Kyou's Scale + slot-specific materials.
-- **Priority order**: Geomancy Pants +3 (FC+15%) → Geomancy Mitaines +3 (Pet DT-13%) → Bagua Mitaines +3 → Bagua Pants +3 → Bagua Tunic +3 → Geomancy Sandals +3 (movement)
+### Reforged AF +3 (Coelestrox, Ethereal Ingress #10) and Reforged Relic +3 (Aurix, Ru'Lude G-8)
+Bagua (Relic) and Geomancy (AF) +3 upgrades. Trade +2 piece + P. GEO Cards + Kyou's Scale + slot-specific materials.
+
+**Per the Compendium of Colure GEO guide on BGWiki**, the two MANDATORY Bagua +3 pieces are **Bagua Pants +3** and **Bagua Sandals +3** — and the reason is their JA-enhancement augments, not their base stats:
+- **Bagua Pants +3** augment: **Enhances Mending Halation** (party AoE HP cure when luopan dies; magnitude unquantified by BGWiki)
+- **Bagua Sandals +3** augment: **Enhances Radial Arcana** (+5% MP restored per merit level — +25% at 5/5 merits, party-wide AoE)
+
+These augments don't exist anywhere else in the game — no Empyrean +3, no Reforged AF, no future gear can replicate them. That's the "mandatory" framing. The other three (Galero/Tunic/Mitaines +3) are "optional" because their stats have viable substitute paths from Empyrean +3, Ea +1, Amalric, Merlinic, etc.
+
+- **Priority order (updated)**:
+  1. ~~Bagua Sandals +3~~ **DONE** (acquired 2026-05-16 via Kupon) — Radial Arcana augment is live
+  2. Bagua Pants +3 (Mending Halation augment + Indi dur+21 — second mandatory)
+  3. Geomancy Pants +3 (FC+15%, Reforged AF — biggest precast upgrade)
+  4. Geomancy Mitaines +3 (Pet DT-13%, Reforged AF — dominant pet-survival lever)
+  5. Bagua Mitaines +3 (Refresh+2 idle, MBD+12 burst)
+  6. Bagua Galero +3 (Luopan HP+600)
+  7. Bagua Tunic +3 (skippable per guide once you have Amalric Robe +1 / augmented Merlinic Jubbah)
+  8. Geomancy Sandals +3 (movement speed +18%)
 
 ### Reforged Empyrean +3 (Ruspix, Leafallia)
 Azimuth +3 upgrades. 70,000 Gallimaufry + 1 Ra'Kaz. Starstone per piece, traded with the +2 piece.

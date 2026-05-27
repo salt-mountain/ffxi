@@ -16,7 +16,9 @@
 --   F11      cycle IdleMode      (Normal / PDT)
 --   F12      cycle HybridMode    (Normal / PDT)
 --   Ctrl+F11 toggle Kiting       — overlays sets.Kiting (Geomancy Sandals move speed +12%)
---   Ctrl+F12 toggle CP mode      — overlays sets.CP (Mecisto. Mantle)
+--   Ctrl+F8  toggle CP mode      — overlays sets.CP (Mecisto. Mantle)
+--                                  (moved off Ctrl+F12 — F12 had 4 modifier variants bound and Windower's
+--                                  matcher dropped ^F12 → fell through to plain F12 = HybridMode cycle)
 --   Alt+F12  toggle AutoFullCircle — auto Full Circle before re-casting Geo-*
 --   Win+F12  force re-equip      (gs c update)
 --
@@ -30,7 +32,10 @@
 --   gs c toggle AutoFullCircle      — auto Full Circle before re-casting Geo-*
 --   gs c afc                        — alias for AutoFullCircle toggle
 --   gs c hud [show|hide|toggle]     — control the on-screen state HUD (default: toggle)
---   gs c hud pos <x> <y>            — move HUD to absolute pixel coordinates
+--   gs c hud pos <x> <y>            — move HUD to absolute pixel coordinates AND persist across logins
+--   gs c hud where                  — print HUD's current rendered position (reflects mouse drags)
+--   gs c hud save                   — persist HUD's current position (after dragging with mouse)
+--                                       persistence file: data/Cevapi/Cevapi_GEO_hud.lua
 --
 -- Pet-aware idle switching:
 --   GearSwap fires `pet_change(pet, gain)` when the luopan is summoned or dismissed (this is built into
@@ -89,8 +94,17 @@
 --                             — Alternative Refresh idle body (Shamash Robe is still better at Refresh+3 + PDT-10%).
 --   • Anhur Robe           — Emporox 25k Potpourri / Celaeno VW;  FC+10% body, NO Refresh.
 --                             — FC body upgrade (no Refresh as community lore often claims).
+--   • Psycloth Lappas (Path D) — Kupon AW-GF or Vidala (Escha-Zi'Tah Geas Fete) → Oboro augment;
+--                                Path D = MP+80, MAcc+15, "Fast Cast"+7%. Equippable by GEO (verified BGWiki 2026-05-25).
+--                                — PRIMARY FC legs upgrade. Replaces unaugmented Vanya Slops (0% FC) in
+--                                  sets.precast.FC. Takes gear-side FC from 39% → 46%.
+--                                — Note: this is +2% better than Lengo Pants' FC+5% below. If pursuing
+--                                  only one FC legs upgrade, choose Psycloth Path D over Lengo.
 --   • Lengo Pants          — Sinister Reign (Arciela/Ygnas);  FC+5%, Haste+5%, SIR-10%, MAB+20.
 --                             — FC legs upgrade (replaces Vanya Slops placeholder in FC set).
+--                             — INFERIOR to Psycloth Lappas Path D for pure FC (+5% vs +7%). Lengo's
+--                               edge is Haste+5% and SIR-10%; Psycloth has neither. For an FC-focused
+--                               set Psycloth wins; for a Haste/anti-interrupt blend Lengo is preferable.
 --   • Phalaina Locket      — Bismarck Voidwatch / Bibiki Bay Pyxis;  MND+3, Cure potency +4%, Cure received +4%.
 --                             — Tiny cure neck (better than Bagua Charm +2 for cure midcast); GEO-legal.
 --   • Locus Ring           — Forri-Porri (Plasm) / Tax'et Delve;  Magic Critical Hit Rate +5%, MB bonus dmg.
@@ -140,16 +154,16 @@
 --   • Bagua +3, Azimuth +2 / +3, Geomancy +1 stats — your RP-upgrade paths
 --   • Idris (Mythic) — long-term comparison vs Solstice Path D
 --
--- NOTE about Nantosuelta's Cape:
--- Your current cape is **pet / evasion focused** (augments: VIT+20, Eva.+10, Eva+20/MEva+20, Pet:Regen+10, Pet:Regen+5).
--- That's great for idle + sets.idle.Pet (keeps the luopan alive longer). It contributes ~nothing to nukes/cures/WS/precast,
--- but we use it in those sets anyway because Nantosuelta's *base* stats (Mag.Eva+15 base, etc.) still beat going capeless.
+-- NOTE about Nantosuelta's Capes (TWO acquired as of 2026-05-23):
+--   Cape A "Pet"  — VIT+20 / Eva+20/MEva+20 / Evasion+10 / Pet:Regen+10 / Pet:Regen+5  (=15 HP/tick pet regen)
+--   Cape B "Solo" — VIT+20 / Eva+20/MEva+20 / Evasion+10 / Pet:Regen+10 / Phys.dmg.taken-10%
+-- Wiring rule (encoded in init_gear_sets via Nantosuelta_Pet / Nantosuelta_Solo locals):
+--   • luopan out  → Pet cape  (sets.idle.Pet, sets.idle.PDT.Pet, precast.JA["Life Cycle"])
+--   • luopan not out → Solo cape (all other sets — base idle, PDT idle, cures, nukes, enfeebs, precast, WS)
+--   • Solo cape STILL gives the luopan Pet:Regen+10, just not the extra +5 from Cape A's 5th slot.
 --
--- HIGH PRIORITY upgrade path: either re-augment THIS cape, or get a 2nd Nantosuelta from Ambuscade currency:
---   • If re-augmenting:  the all-rounder is HP+60 / Mag.Acc.+20 Mag.Dmg.+20 / Pet:MAcc+20 Pet:MDmg+20 / "Mag.Atk.Bonus"+10 / Phys.dmg.taken-10%
---     (works for both your spells AND your luopan's aura accuracy; helps every set we use).
---   • If getting a 2nd:  keep the current pet-cape for idle/Pet, augment the new one as the nuke cape above.
---   • With a 3rd cape:  add a cure-potency cape (HP+60 / Eva+20/MEva+20 / "Cure" potency+10% / Pet:Magic Eva+10 / Phys.dmg.taken-10%).
+-- 3rd-cape upgrade path: cure cape (HP+60 / Eva+20/MEva+20 / "Cure" potency+10% / Pet:Magic Eva+10 / Phys.dmg.taken-10%).
+-- Would slot into sets.midcast.Cure / Curaga, replacing Nantosuelta_Solo there for cure-potency stacking.
 -------------------------------------------------------------------------------------------------------------------
 
 
@@ -184,9 +198,43 @@ local hud_settings = {
 
 local hud = nil
 
+-- Persisted HUD position. Lives next to this file so it survives `gs reload` and
+-- relogs. Written by `gs c hud pos <x> <y>`, read by init_hud at startup.
+local hud_pos_path = windower.addon_path..'data/Cevapi/Cevapi_GEO_hud.lua'
+
+function load_hud_pos()
+    local f = io.open(hud_pos_path, 'r')
+    if not f then return nil end
+    f:close()
+    local ok, pos = pcall(dofile, hud_pos_path)
+    if ok and type(pos) == 'table' and tonumber(pos.x) and tonumber(pos.y) then
+        return { x = tonumber(pos.x), y = tonumber(pos.y) }
+    end
+    return nil
+end
+
+function save_hud_pos(x, y)
+    local f = io.open(hud_pos_path, 'w')
+    if not f then
+        add_to_chat(123, '[GEO] Could not write HUD position to '..hud_pos_path)
+        return false
+    end
+    f:write(string.format('return { x = %d, y = %d }\n', x, y))
+    f:close()
+    return true
+end
+
 function init_hud()
+    -- If a saved position exists, override the default before creating the text object
+    -- so the HUD appears at the persisted spot rather than the (8, 1052) default.
+    local saved_pos = load_hud_pos()
+    if saved_pos then
+        hud_settings.pos = saved_pos
+    end
     if not hud then
         hud = texts.new(hud_format, hud_settings)
+    elseif saved_pos then
+        hud:pos(saved_pos.x, saved_pos.y)
     end
     hud:show()
 end
@@ -266,7 +314,7 @@ function user_setup()
     send_command('bind F10 gs c cycle CastingMode')
     send_command('bind F11 gs c cycle IdleMode')
     send_command('bind F12 gs c cycle HybridMode')
-    send_command('bind ^F12 gs c toggle CP')
+    send_command('bind ^F8 gs c toggle CP')
     send_command('bind !F12 gs c toggle AutoFullCircle')
     send_command('bind @F12 gs c update')
     send_command('bind ^F11 gs c toggle Kiting')   -- Ctrl+F11: toggle Kiting (overlays sets.Kiting via Mote's apply_kiting)
@@ -280,7 +328,7 @@ end
 -- Called from Mote's file_unload — clean up our binds AND the HUD overlay
 function user_unload()
     send_command('unbind F9; unbind F10; unbind F11; unbind F12')
-    send_command('unbind ^F12; unbind !F12; unbind @F12; unbind ^F11')
+    send_command('unbind ^F8; unbind !F12; unbind @F12; unbind ^F11')
     destroy_hud()
 end
 
@@ -289,16 +337,31 @@ end
 -- Gear sets.
 -------------------------------------------------------------------------------------------------------------------
 function init_gear_sets()
-    -- Your one Nantosuelta — pet / evasion build (great for idle.Pet, mediocre for nuke/cure/WS).
-    -- All sets reference this single local, so when you augment a 2nd cape you only edit this file in 1 place.
-    -- If you ever get a 2nd cape, declare it as Nantosuelta_Nuke = { ... } and swap it into the nuke/burst sets below.
-    -- Exact augment order from /gs export — augment matching is order-sensitive in gearswap.
-    local Nantosuelta = { name="Nantosuelta's Cape", augments={
+    -- Two Nantosuelta capes — identical except 5th augment. Rule: Pet cape (Regen+5) when luopan
+    -- is out, Solo cape (PDT-10%) when it isn't. Both still carry Pet Regen+10 so the luopan keeps
+    -- regen even in the Solo cape, just less. Augment order is order-sensitive in gearswap matching.
+    --
+    --   Nantosuelta_Pet  — VIT+20 / Eva+20+MEva+20 / Evasion+10 / Pet:Regen+10 / Pet:Regen+5
+    --                      = 15 HP/tick pet regen total. Used in sets.idle.Pet, sets.idle.PDT.Pet,
+    --                      and precast.JA["Life Cycle"] (Life Cycle requires luopan out by design).
+    --
+    --   Nantosuelta_Solo — VIT+20 / Eva+20+MEva+20 / Evasion+10 / Pet:Regen+10 / Phys.dmg.taken-10%
+    --                      = 10 HP/tick pet regen + PDT-10%. Used in every other set (idle/PDT/cures/
+    --                      nukes/enfeebs/precast/WS) — PDT-10% on a single slot is meaningful for
+    --                      player survival during cast windows where luopan is not contributing.
+    local Nantosuelta_Pet = { name="Nantosuelta's Cape", augments={
         'VIT+20',
         'Eva.+20 /Mag. Eva.+20',
         'Evasion+10',
         'Pet: "Regen"+10',
         'Pet: "Regen"+5',
+    }}
+    local Nantosuelta_Solo = { name="Nantosuelta's Cape", augments={
+        'VIT+20',
+        'Eva.+20 /Mag. Eva.+20',
+        'Evasion+10',
+        'Pet: "Regen"+10',
+        'Phys. dmg. taken-10%',
     }}
 
     -- =============================================================================
@@ -311,7 +374,8 @@ function init_gear_sets()
     --   Vanya Clogs (Path D) : +10% FC + Haste+2%
     --   Embla Sash           : +5% FC + Enh.Mag.Dur+10% + Sublimation+3
     --   Loquac. Earring      : +2% FC
-    --   Total confirmed      : 35% FC. Cast-time-cap is -80%; gap closes with TODO accessories + Indi-Haste buff.
+    --   Malignance Earring   : +4% FC + INT+8 + MND+8 + MAcc+10 + MAB+8
+    --   Total confirmed      : 39% FC. Cast-time-cap is -80%; gap closes with TODO accessories + Indi-Haste buff.
     sets.precast.FC = {
         main  = "Solstice",             -- has Path D R15 — +5% FC
         sub   = "Genbu's Shield",       -- has — lvl 74 mage shield, PDT-10%. Upgrade target: Genmei Shield (lvl 99, Genbu Geas Fete Escha Ru'Aun)
@@ -324,10 +388,10 @@ function init_gear_sets()
         neck  = "Voltsurge Torque",     -- TODO: Cloister of Storms (Avatar Prime II) or Kupon AW-Mis; +4% FC
         waist = "Embla Sash",           -- has — +5% FC (verified)
         left_ear  = "Loquac. Earring",  -- has — +2% FC
-        right_ear = "Etiolation Earring", -- TODO: Vagary (Perfidien); +1% FC
+        right_ear = "Malignance Earring", -- has — FC+4%, INT+8, MND+8, MAcc+10, MAB+8 (replaces Etiolation TODO; Malignance is +3% FC over Etiolation)
         left_ring  = "Kishar Ring",     -- TODO: Reisenjima Henge Omen (Glassy Gorger); +4% FC
         right_ring = "Lebeche Ring",    -- TODO: stats not yet BGWiki-verified
-        back  = Nantosuelta,            -- 0 FC contribution; placeholder
+        back  = Nantosuelta_Solo,            -- 0 FC contribution; placeholder
     }
 
     -- Cure precast — Vanya Cuffs Path B's "Cure cast time -7%" is already in base FC.hands.
@@ -350,16 +414,19 @@ function init_gear_sets()
     -- =============================================================================
     sets.precast.JA = {}
     sets.precast.JA["Bolster"]            = { body  = "Bagua Tunic +2"     }  -- has — Enhances Bolster: +30s duration (augment persists once equipped at JA use)
-    sets.precast.JA["Life Cycle"]         = { body  = "Geo. Tunic +1", back = Nantosuelta }  -- HP transfer to luopan
-    sets.precast.JA["Full Circle"]        = { head  = "Azimuth Hood +1",
-                                              hands = "Bagua Mitaines +2"  }  -- +MP recovered
-    sets.precast.JA["Radial Arcana"]      = { feet  = "Bagua Sandals +2"   }  -- +MP restored to party
+    sets.precast.JA["Life Cycle"]         = { body  = "Geomancy Tunic +2", back = Nantosuelta_Pet }  -- has — "Life Cycle"+12 (was +10 on AF +1) = more HP transferred to luopan; Pet cape because luopan is by definition out when Life Cycle fires
+    sets.precast.JA["Full Circle"]        = { head  = "Azimuth Hood +2",
+                                              hands = "Bagua Mitaines +2"  }  -- +MP recovered (Hood +2 has Full Circle+3 vs +1's +2)
+    sets.precast.JA["Radial Arcana"]      = { feet  = "Bagua Sandals +3"   }  -- has — Augment: Enhances Radial Arcana effect = +5% MP restored per merit level (so +25% MP at 5/5 merits, party-wide AoE)
     sets.precast.JA["Mending Halation"]   = { legs  = "Bagua Pants +2"     }  -- +AoE Cure amount
-    sets.precast.JA["Ecliptic Attrition"] = { hands = "Geo. Mitaines +1"   }  -- +next aura tick potency
-    sets.precast.JA["Lasting Emanation"]  = { body  = "Geo. Tunic +1"      }  -- +luopan duration
-    sets.precast.JA["Theurgic Focus"]     = { head  = "Azimuth Hood +1"    }  -- +next-spell MAB
-    sets.precast.JA["Blaze of Glory"]     = {}
-    sets.precast.JA["Entrust"]            = {}
+    sets.precast.JA["Ecliptic Attrition"] = { hands = "Geomancy Mitaines +3"   }  -- has — +next aura tick potency (AF+3 retains the Ecliptic Attrition augment from base AF, now stronger)
+    sets.precast.JA["Lasting Emanation"]  = { body  = "Geomancy Tunic +2"  }  -- has — base stats upgrade only; AF body actually augments "Life Cycle" not "Lasting Emanation" (the original file comment was wrong). Slot kept for stat consistency.
+    sets.precast.JA["Theurgic Focus"]     = { head  = "Azimuth Hood +2"    }  -- +next-spell MAB
+    sets.precast.JA["Curative Recantation"] = { hands = "Bagua Mitaines +2" }  -- has — augment "Enhances Curative Recantation effect" (+2% per RP level on +2; scales to +3)
+    sets.precast.JA["Primeval Zeal"]      = { head  = "Bagua Galero +2"    }  -- has — augment "Enhances Primeval Zeal effect"
+    sets.precast.JA["Concentric Pulse"]   = { head  = "Bagua Galero +2"    }  -- has — augment "Concentric Pulse uses Luopan's max HP instead of current HP"; Galero +2 also adds +30 to Drain/Aspir potency (not a JA effect)
+    sets.precast.JA["Blaze of Glory"]     = {}  -- no GEO JSE augments Blaze of Glory
+    sets.precast.JA["Entrust"]            = {}  -- no GEO JSE augments Entrust (verified across all 15 +3 slot pages 2026-05-20)
 
     -- =============================================================================
     -- PRECAST: Weapon Skills (Cataclysm, Black Halo, Realmrazer share Nyame base)
@@ -380,7 +447,7 @@ function init_gear_sets()
         right_ear = "Mache Earring +1", -- has
         left_ring  = "Chirich Ring +1", -- has
         right_ring = "Mummu Ring",      -- has
-        back  = Nantosuelta,
+        back  = Nantosuelta_Solo,
     }
 
     -- =============================================================================
@@ -394,7 +461,7 @@ function init_gear_sets()
     --   Vanya Cuffs Path B is the Healing Skill +20 source.
     --   Sanare Earring does NOT have cure cast time reduction (verified base stats: MEva+6, MDB+4, Club skill+5).
     sets.midcast.Cure = {
-        main  = "Solstice",             -- has — no specific cure benefit but no better verified option in inventory
+        main  = "Daybreak",             -- has — Aeonic club: Cure potency +30%, MND+30, Magic Damage+241, Refresh+1. THE biggest cure mainhand upgrade in the game (acquired 2026-05-20)
         sub   = "Genbu's Shield",       -- has — lvl 74, PDT-10% (synergy-augmentable for Cure pot 1-5%, Cure cast 1-8%); upgrade: Genmei Shield
         range = "Dunna",                -- has R15 — Dunna locked in range; for GEO the ammo slot collides with range
                                         --   so we leave ammo undefined. Hydrocera (MND+3, MAcc+6) would kick out
@@ -402,15 +469,15 @@ function init_gear_sets()
         head  = "Vanya Hood",           -- has Path D — base Cure potency +10%, +10% FC + Haste 2%
         body  = "Vanya Robe",           -- has Path C — MND+10, SIRD-15%, no cure benefit; placeholder
         hands = "Vanya Cuffs",          -- has Path B — Healing Skill +20, Cure cast time -7%, MDT-3%
-        legs  = "Vanya Slops",          -- unaugmented; placeholder. Path A would add Cure potency +7%.
+        legs  = "Bagua Pants +2",       -- has — HP+108 (vs Vanya Slops HP+43). Vanya Slops are unaugmented and give 0 cure benefit; Bagua Pants are also 0 cure benefit but preserve 65 HP during midcast. If Vanya Slops Path A is augmented later (+Cure potency 7%), swap back.
         feet  = "Vanya Clogs",          -- has Path D — +10% FC, no specific cure benefit but stays in slot
         neck  = "Bagua Charm +2",       -- has — MAcc+30, Geomancy+7; placeholder until a Cure-pot neck is acquired
         waist = "Embla Sash",           -- placeholder; auto-overridden to Hachirin-no-Obi on Lightsday (TODO: verify Hachirin)
         left_ear  = "Mendi. Earring",   -- has — VERIFIED: Cure potency +5% + Cure cast -5% + MP+30 + Conserve MP+2 — real cure piece
-        right_ear = "Loquac. Earring",  -- has — Cure precast benefits from its +2% FC
+        right_ear = "Alabaster Earring",-- has — HP+100, Haste+5%, DT-5% (was Loquac. Earring; Loquac's only contribution is FC+2% which DOESN'T apply during midcast, only precast — so it was costing 100 HP for zero cure benefit). Alabaster adds DT during the cast vulnerability window.
         left_ring  = "Stikini Ring +1", -- has — VERIFIED: MND+8, MAcc+11, All magic skills +8 (incl. Healing), Refresh+1
         right_ring = "Stikini Ring +1", -- TODO: verify you own a 2nd (gearinfo only saw one)
-        back  = Nantosuelta,            -- pet/eva cape — 0 cure benefit; placeholder
+        back  = Nantosuelta_Solo,            -- pet/eva cape — 0 cure benefit; placeholder
     }
     sets.midcast.Curaga = sets.midcast.Cure
 
@@ -427,7 +494,7 @@ function init_gear_sets()
         main  = "Solstice",
         sub   = "Genbu's Shield",           -- has — lvl 74 sub, PDT-10%; upgrade target: Genmei Shield
         range = "Dunna",                    -- has R15 — locked; ammo slot left empty (collides with range on GEO)
-        head  = "Azimuth Hood +1",          -- has
+        head  = "Azimuth Hood +2",          -- has — Geomancy skill+20, Haste+6%, Full Circle+3, DT-11%, MAB+46
         body  = "Telchine Chasuble",        -- TODO: Skirmish — +Enh.Mag duration
         hands = "Telchine Gloves",          -- TODO: Skirmish
         legs  = "Telchine Braconi",         -- TODO: Skirmish
@@ -438,10 +505,11 @@ function init_gear_sets()
         right_ear = "Mimir Earring",        -- TODO: Reisenjima HM; +10 Enh.Mag skill
         left_ring  = "Stikini Ring +1",
         right_ring = "Stikini Ring +1",     -- TODO: 2nd Stikini verify
-        back  = Nantosuelta,
+        back  = Nantosuelta_Solo,
     }
 
     sets.midcast.Refresh = set_combine(sets.midcast['Enhancing Magic'], {
+        main = "Daybreak",                  -- has — Refresh+1 augments the self-Refresh buff tier
         head = "Amalric Coif",              -- TODO: Sortie BCNM; +Refresh potency
         body = "Shamash Robe",              -- has — fallback if no Amalric body
         legs = "Atrophy Tights +3",         -- TODO: Reforged BLM legs +3 — but you're GEO so probably skip
@@ -467,21 +535,21 @@ function init_gear_sets()
     -- MIDCAST: Enfeebling Magic (Slow II, Paralyze II, Dia, Bio, Sleep, etc.)
     -- =============================================================================
     sets.midcast['Enfeebling Magic'] = {
-        main  = "Solstice",
+        main  = "Daybreak",                 -- has — MAcc+40 (vs Solstice Path D MAcc+35), MND+30 (boosts MND-based enfeebs like Slow II / Paralyze II)
         sub   = "Genbu's Shield",           -- has — lvl 74, PDT-10%. Upgrade target: Ammurapi Shield (Sortie BCNM; +Enfeebling effect)
         range = "Dunna",                    -- has R15 — locked; ammo slot left empty (collides with range on GEO)
         head  = "Bagua Galero +2",          -- has — Indi magic acc + Geomancy skill
-        body  = "Azimuth Coat +1",          -- has — MAcc + Geomancy skill
+        body  = "Azimuth Coat +2",          -- has — MAcc+54, MAB+54, Elemental skill+23, Refresh+3, MBD II+4, Haste+3%, Enmity-9
         hands = "Azimuth Gloves +1",        -- has
-        legs  = "Bagua Pants +2",           -- has
-        feet  = "Bagua Sandals +2",         -- has
+        legs  = "Azimuth Tights +2",        -- has — MAcc+53, MAB+53, INT+50, MND+33, MDmg+23, Dark skill+25, Haste+5%, MBD+10 (strict upgrade over Bagua Pants +2's MAcc+29)
+        feet  = "Bagua Sandals +3",         -- has — Enfeebling skill+21 (vs +19 on +2), MAcc+36, MAB+48; lands /RDM sub enfeebles cleaner
         neck  = "Bagua Charm +2",           -- has
         waist = "Acuity Belt +1",           -- TODO: Sortie; +MAcc
         left_ear  = "Regal Earring",        -- TODO: Ambuscade
         right_ear = "Vor Earring",          -- TODO: Reisenjima
         left_ring  = "Stikini Ring +1",
         right_ring = "Stikini Ring +1",
-        back  = Nantosuelta,
+        back  = Nantosuelta_Solo,
     }
 
     -- =============================================================================
@@ -498,13 +566,13 @@ function init_gear_sets()
     -- BOTH stack additively — so Jhakri Robe + Mall. pieces > all-Jhakri.
     -- =============================================================================
     sets.midcast['Elemental Magic'] = {
-        main  = "Solstice",                 -- has
+        main  = "Daybreak",                 -- has — Magic Damage+241 (vs Solstice +124 — biggest single delta), MAB+40, MAcc+40, MND+30. Trade: lose Pet:DT-4% during cast window and INT+6 — worth it for the MD swing
         sub   = "Genbu's Shield",           -- has — lvl 74, PDT-10%. Upgrade target: Ammurapi Shield (Sortie BCNM; M.Eva + Enhances Helix dmg)
         range = "Dunna",                    -- has R15 — locked; ammo slot left empty (collides with range on GEO)
-        head  = "Jhakri Coronal +2",        -- has — MAB+27, INT+22 (beats Azimuth Hood +1 for raw damage)
+        head  = "Jhakri Coronal +2",        -- has — MAB+27, INT+22 (NOTE: Azimuth Hood +2 has MAB+46/INT+34 — verify Jhakri Coronal +2 actual stats; may be obsoleted)
         body  = "Jhakri Robe +2",           -- has — MAB+47, INT+27, +6% MBD I
         hands = "Jhakri Cuffs +2",          -- has — MAB+23, INT+22
-        legs  = "Jhakri Slops +2",          -- has — MAB+27, INT+22 (Mall. Trews +2 would upgrade here)
+        legs  = "Azimuth Tights +2",        -- has — MAB+53, INT+50, MDmg+23, MAcc+53, MBD+10, Haste+5%, Dark skill+25 (strict upgrade over Jhakri Slops +2 in every relevant nuke stat)
         feet  = "Jhakri Pigaches +2",       -- has — MAB+27, INT+22
         neck  = "Bagua Charm +2",           -- has (small MAB via skill; better neck options are Ambuscade)
         waist = "Embla Sash",               -- placeholder; auto-overridden by day/weather waist check below
@@ -512,7 +580,7 @@ function init_gear_sets()
         right_ear = "Regal Earring",        -- TODO: Ambuscade; MAcc + MAB combo
         left_ring  = "Jhakri Ring",         -- has — MAB+5, INT+5
         right_ring = "Metamor. Ring +1",    -- TODO: Sheol path A; INT+10, MAB+8
-        back  = Nantosuelta,                -- current pet cape contributes ~0 MAB; nuke cape is a major upgrade
+        back  = Nantosuelta_Solo,                -- current pet cape contributes ~0 MAB; nuke cape is a major upgrade
     }
 
     -- RESISTANT: swap MAB pieces for highest-MAcc verified pieces. Mall. +2 has MAcc+42-44 per piece.
@@ -520,18 +588,25 @@ function init_gear_sets()
         -- head stays Jhakri Coronal +2 (MAcc+44, tied with Mall. Chapeau +2 but higher MAB)
         -- body stays Jhakri Robe +2 (MAcc+46, highest)
         hands = "Mall. Cuffs +2",           -- has — MAcc+43 (vs Bagua Mitaines +2 MAcc+28)
-        legs  = "Jhakri Slops +2",          -- has — MAcc+45 (vs Bagua Pants +2 MAcc+29)
-        feet  = "Mall. Clogs +2",           -- has — MAcc+42 (vs Bagua Sandals +2 MAcc+26)
+        -- legs stays Azimuth Tights +2 from base (MAcc+53 already beats Jhakri Slops +2 MAcc+45 and Mall. Trews +2)
+        feet  = "Mall. Clogs +2",           -- has — MAcc+42 (still beats Bagua Sandals +3's MAcc+36 for Resistant casting)
     })
 
-    -- BURST: Nyame body/head/legs (MBD + Skillchain Bonus + DT survival) + your MBD-heavy hands/feet.
-    -- VERIFIED MBD totals in this set: Nyame Helm+5 + Nyame Mail+7 + Bagua Mitaines+8 + Nyame Flanchard+6 + Jhakri Pigaches+7 = 33 MBD
-    -- (cap is +40% gear; well under). All Magic Burst Damage I (no MBD II pieces in your inventory).
+    -- BURST: Azimuth Coat +2 body + Azimuth Tights +2 legs (MAB / MBD I / Empyrean set bonus) + Nyame head + MBD-heavy hands/feet.
+    -- MBD totals in this set:
+    --   MBD I  = Nyame Helm+5 + Bagua Mitaines+8 + Azimuth Tights +2 (+10) + Jhakri Pigaches+7 + Jhakri Ring+2 = 32 (cap +40%)
+    --   MBD II = Azimuth Coat +2 (+4) = 4 (cap +10%) — Coat +2 is the only GEO body with MBD II
+    -- Net swing from removing Nyame Flanchard and adding Azimuth Tights +2:
+    --   +4 MBD I, +23 MAB, +28 INT, +23 MDmg, +5% Haste, -6 SC Bonus, -8% DT
+    -- Net swing from removing Nyame Mail and adding Azimuth Coat +2 (prior swap):
+    --   -7 MBD I, +4 MBD II, +24 MAB, +3 Refresh, +Elemental skill+23, -9% DT
+    -- Azimuth Coat +2 + Tights +2 = 2 Empyrean +2 pieces; the "Occ. casts geomancy w/o MP" set bonus is irrelevant here
+    -- (it only triggers on geomancy spells, not elemental nukes). Adding Mujin Band (TODO, +5 MBD II) → 9 MBD II.
     sets.midcast['Elemental Magic'].Burst = set_combine(sets.midcast['Elemental Magic'], {
         head  = "Nyame Helm",               -- has — MAB+30, MBD+5, SC Bonus+5, DT-7%
-        body  = "Nyame Mail",               -- has — MAB+30, MBD+7, SC Bonus+7, DT-9%, INT+42, MND+37
+        body  = "Azimuth Coat +2",          -- has — MAB+54, MBD II+4, Refresh+3, Elemental skill+23, INT+45 (no DT, but +24 MAB and the only GEO body with MBD II)
         hands = "Bagua Mitaines +2",        -- has — MAB+43, MBD+8 (more MAB than Nyame Gauntlets's MAB+30 + MBD+5)
-        legs  = "Nyame Flanchard",          -- has — MAB+30, MBD+6, SC Bonus+6, DT-8%
+        -- legs stays Azimuth Tights +2 from base (MAB+53, MBD+10 beats Nyame Flanchard's MAB+30, MBD+6 — see header comment for swing)
         feet  = "Jhakri Pigaches +2",       -- has — MAB+39, MBD+7 (more MAB than Nyame Sollerets's MAB+30 + MBD+5)
         left_ring  = "Jhakri Ring",         -- has — MAB+3, MBD+2 (small additional MBD; Set Bonus FC if Jhakri stack)
         right_ring = "Mujin Band",          -- TODO: claimed +5% MBD II — stats need BGWiki verification
@@ -554,21 +629,21 @@ function init_gear_sets()
     -- =============================================================================
     -- Base is the "skill cap" stack. Indi overlay adds duration without losing skill.
     sets.midcast.Geomancy = {
-        main  = "Solstice",                 -- has — Path D upgraded
+        main  = "Solstice",                 -- has — Path D R15. KEEP for GEO: base Handbell skill+5 (boosts Geo-* / Indi-* potency) + Indicolure dur+15. Daybreak has MD+241 but zero Handbell skill / zero Indi dur — wrong tool for Geomancy
         sub   = "Genbu's Shield",           -- has — lvl 74 sub, PDT-10%; upgrade target: Genmei Shield
         range = "Dunna",                    -- has — Geomancy +5 + R15 augments (Dunna is range slot, not ammo)
-        head  = "Azimuth Hood +1",          -- has — Geomancy skill +15
+        head  = "Azimuth Hood +2",          -- has — Geomancy skill +20 (was +15 on +1), DT-11%, Full Circle+3, Luopan Regen+4, Haste+6%
         body  = "Bagua Tunic +2",           -- has — Geomancy skill +14, MAcc+30, MAB+56, INT/MND/CHR+34, Haste+3%
-        hands = "Geo. Mitaines +1",         -- has — Ecliptic Attrition augment + skill
+        hands = "Geomancy Mitaines +3",     -- has — Geomancy skill+19 (was +15 on +1), MAcc+48, PDT-3%, Luopan DT-13%, Haste+3%, Ecliptic Attrition augment
         legs  = "Bagua Pants +2",           -- has
-        feet  = "Azimuth Gaiters +1",       -- has — Geomancy skill
+        feet  = "Azimuth Gaiters +2",       -- has — Indicolure spell duration +25, DT-10%, MAcc+50, MAB+45, Haste+3% (replaces +1: more Indi dur and DT-10% is new)
         neck  = "Bagua Charm +2",           -- has
         waist = "Embla Sash",
         left_ear  = "Mendi. Earring",       -- has
         right_ear = "Lugalbanda Earring",   -- TODO
         left_ring  = "Stikini Ring +1",
         right_ring = "Stikini Ring +1",
-        back  = Nantosuelta,
+        back  = Nantosuelta_Solo,
     }
 
     -- Indi-* overlay: same base but lean into duration where possible.
@@ -577,6 +652,24 @@ function init_gear_sets()
         -- Bagua Sandals +1/+2 has Indi duration; if your Sandals +2 has the Indi aug, keep them.
         -- TODO: once you have a Lifestream Cape (Reisenjima craft), put it here:
         --   back = { name="Lifestream Cape", augments={...} }
+    })
+
+    -- Geo-* overlay: luopan stats are LOCKED at "time of placement" (BGWiki Luopan page).
+    -- Whatever gear is equipped at the moment the cast completes is what the spawned luopan
+    -- inherits — aftercast gear changes do NOT retroactively adjust the luopan's HP/regen.
+    -- So pet-stat pieces must live in midcast (not just sets.idle.Pet) to be inherited.
+    --
+    -- Feet swap: Azimuth Gaiters +2 (DT-10%, no pet stat) → Bagua Sandals +3 (Luopan: Regen+5).
+    -- Trade: lose DT-10% during the ~2s cast window, gain Luopan Regen+5 for the luopan's
+    -- entire life. Cheap win for pet survival.
+    --
+    -- Head NOT swapped here intentionally: swapping Azimuth Hood +2 (Geomancy skill +20)
+    -- for Bagua Galero +2 (Luopan HP+500) would add 500 max HP to the luopan but cost
+    -- 20 Geomancy skill, weakening Geo-* aura potency for the luopan's life. Kept Hood +2
+    -- for aura strength. If running content where the luopan dies regularly, swap to:
+    --   head = "Bagua Galero +2"   -- Luopan HP+500 at placement; aura weaker
+    sets.midcast.Geomancy.Geo = set_combine(sets.midcast.Geomancy, {
+        feet = "Bagua Sandals +3",
     })
 
     -- =============================================================================
@@ -590,26 +683,60 @@ function init_gear_sets()
         range = "Dunna",                    -- has R15 — locked. On GEO the ammo slot collides with range, so
                                             --   we never define ammo in any set. Homiliary (Limbus, Refresh+1)
                                             --   would be a tempting idle ammo BUT it would kick Dunna out.
-        head  = "Azimuth Hood +1",          -- has — Geomancy skill+15, Full Circle+2, Haste+6%, Azimuth set bonus
+        head  = "Azimuth Hood +2",          -- has — Geomancy skill+20, Full Circle+3, DT-11%, Luopan Regen+4, Haste+6%, Azimuth set bonus (activates with 2+ Empyrean +2 pieces — now triggers with Coat +2 + Hood +2)
         body  = "Shamash Robe",             -- has — Refresh+3, PDT-10%, MAB+45, Resist Silence+90
-        hands = "Bagua Mitaines +2",        -- has — Refresh+1, MBD+8, Haste+3%
+        hands = "Azimuth Gloves +2",        -- has — DT-11%, Enfeebling skill+23, Haste+3%, MAB+47, MAcc+52, Enmity-12 (replaces Bagua Mitaines +2 for support-survival framing; loses Refresh+1, gains DT-11%)
         legs  = "Bagua Pants +2",           -- has — Indicolure dur+18, MAB+44, Haste+5%
-        feet  = "Bagua Sandals +2",         -- has — Luopan Regen+4, MAB+41, Haste+3%
+        feet  = "Azimuth Gaiters +2",       -- has — DT-10% for player survival (was Sandals +3 for Luopan Regen+5; swapped 2026-05-17 per support-survival framing). Sandals +3 still equips in `sets.idle.Pet` for pet survival when luopan is out.
         neck  = "Bagua Charm +2",           -- has (Path A: MP+50, Luopan Dur+25%, Luopan Absorbs DT+10%). TODO upgrade: Loricate Torque +1 for DT-6%.
         waist = "Embla Sash",               -- has — Sublimation+3, FC+5%, Enh.Mag dur+10%. TODO: Carrier's Sash for resist utility.
         left_ear  = "Odnowa Earring",       -- has — HP+100 (from MP convert), VIT+2, STR+2, MDT-1%. Idle-DT pick over Loquac. (FC doesn't apply at idle).
         right_ear = "Alabaster Earring",    -- has — DEF+10, HP+100, Haste+5%, DT-5%, Pet:Acc/RAcc/MAcc+15. Biggest single DT earring you own.
         left_ring  = "Stikini Ring +1",     -- has — MND+8, MAcc+11, All Magic Skills+8, Refresh+1
         right_ring = "Stikini Ring +1",     -- TODO: verify if you own a 2nd Stikini Ring +1. If not, use a placeholder ring you own. KEY UPGRADE: Defending Ring (Sovereign Behemoth) for DT-10%.
-        back  = Nantosuelta,
+        back  = Nantosuelta_Solo,
     }
-    -- Fallback PDT idle uses your full Nyame stack.
+    -- =========================================================================
+    -- PDT idle — MAXIMIZE PLAYER DT, PERIOD.
+    -- This is the "I'm in content that can kill me, big AoEs incoming" stance.
+    -- User explicitly toggles to PDT only when survival > everything else.
+    -- Pet survival is NOT a consideration here — sets.idle.PDT.Pet aliases to this set.
+    -- =========================================================================
+    -- Slot-by-slot DT comparison (Empyrean vs Nyame) — pick whichever is higher per slot:
+    --   head: Hood +2 (DT-11%) > Nyame Helm (DT-7%)            → KEEP base idle's Hood +2
+    --   body: Shamash Robe (PDT-10%, physical only) < Nyame Mail (DT-9% mixed) → OVERRIDE to Nyame Mail
+    --   hands: Gloves +2 (DT-11%) > Nyame Gauntlets (DT-7%)    → KEEP base idle's Gloves +2
+    --   legs: Bagua Pants +2 (0% DT) < Nyame Flanchard (DT-8%) → OVERRIDE to Nyame Flanchard
+    --   feet: Gaiters +2 (DT-10%) > Nyame Sollerets (DT-7%)    → KEEP base idle's Gaiters +2
+    --
+    -- Full DT accounting across ALL inherited slots:
+    --   Generic DT: Hood 11 + Mail 9 + Gloves 11 + Flanchard 8 + Gaiters 10 + Alabaster Earring 5
+    --             = 54% raw → CAPPED at -50% generic DT. The extra 4% is wasted.
+    --             Once you have Defending Ring (DT-10%) or Loricate Torque +1 (DT-6%), the cap
+    --             gives slack to swap a current generic DT piece for utility (e.g., Alabaster → Magnetic
+    --             Earring for SIRD-8%, or drop a Nyame slot for an Empyrean Refresh body).
+    --   PDT-only:   Genbu's Shield -10% (stacks ON TOP of the generic cap for physical damage)
+    --   MDT-only:   Odnowa Earring -1% (negligible; main MDT upgrade target is Etiolation Earring -3% MDT)
+    --
+    -- Effective damage reduction in this set:
+    --   Physical: -50% generic + -10% PDT = ~-60% combined
+    --   Magical:  -50% generic + -1% MDT  = ~-51% combined
+    --
+    -- Empyrean set bonus: Hood +2 + Gloves +2 + Gaiters +2 = 3 pieces in PDT idle
+    -- → "Occ. casts geomancy spells without using MP" at +3% chance (was +2% before Gloves +2).
+    --
+    -- Empyrean set bonus active (Hood +2 + Gaiters +2 = 2 pieces, "Occ. casts geomancy spells
+    -- without using MP" at +2% chance).
+    --
+    -- DT-cap upgrade path (these don't add DT past the cap but FREE UP non-DT pieces for utility):
+    --   • Defending Ring (DT-10%) — Sovereign Behemoth — frees up an Alabaster Earring slot for utility
+    --   • Loricate Torque +1 (DT-6%) — Sovereign Behemoth / Unity — frees up Bagua Charm slot
+    --   • Etiolation Earring (MDT-3%) — Vagary — real MDT upgrade (we're under MDT cap)
+    --   • Adamantite Armor (DT-20%) — Limbus — frees up Nyame Mail slot (Coat +2's set bonus + Refresh+3 could go here instead)
     sets.idle.PDT = set_combine(sets.idle, {
-        head  = "Nyame Helm",
-        body  = "Nyame Mail",
-        hands = "Nyame Gauntlets",
-        legs  = "Nyame Flanchard",
-        feet  = "Nyame Sollerets",
+        body  = "Nyame Mail",       -- DT-9% mixed (replaces Shamash Robe's PDT-10% physical-only)
+        legs  = "Nyame Flanchard",  -- DT-8%
+        -- hands intentionally NOT overridden: base idle's Azimuth Gloves +2 (DT-11%) wins over Nyame Gauntlets (DT-7%)
     })
     -- (Previously had an empty sets.idle.Town here. Removed because Mote's idle walk is
     --  sets.idle → [scope: Weak/Town/Field] → [IdleMode] → .Pet → CustomIdleGroups.
@@ -621,20 +748,25 @@ function init_gear_sets()
     -- Pet survival philosophy: stack Luopan: HP / Luopan: DT / Luopan: Regen / Pet: Regen.
     -- Your verified pet-survival pieces:
     --   Bagua Galero +2 head  : Luopan HP+500             (BIG max-HP boost — keeps Mending Halation/Radial Arcana strong)
-    --   Geo. Mitaines +1 hands: Luopan: Damage Taken -11% (KEY pet DT reduction)
-    --   Azimuth Hood +1 head  : Luopan: Regen+3 + Set Bonus MP-on-Geo (alt head if you'd rather have GEO MP refund)
-    --   Bagua Sandals +2 feet : Luopan: Regen+4           (already in base idle; stays)
+    --   Geomancy Mitaines +3 hands: Luopan: Damage Taken -13% + PDT-3% (KEY pet DT reduction; biggest single pet-survival piece in the game)
+    --   Azimuth Hood +2 head  : Luopan: Regen+4 + Set Bonus MP-on-Geo (alt head if you'd rather have GEO MP refund — but Galero +2's HP+500 wins for spike survival)
+    --   Bagua Sandals +3 feet : Luopan: Regen+5           (explicit override in sets.idle.Pet; base idle uses Azimuth Gaiters +2 for player DT-10%)
     --   Nantosuelta (your cape augments): Pet: Regen+15 total (already in base idle; stays)
     --   Bagua Charm +2 (Oboro Path A augment) : Luopan: Absorbs DT+10% (TODO: you'd need to augment via Oboro)
     sets.idle.Pet = set_combine(sets.idle, {
-        head  = "Bagua Galero +2",          -- Luopan HP+500 (overrides Azimuth Hood +1)
-        hands = "Geo. Mitaines +1",         -- Luopan: Damage Taken -11% (overrides Bagua Mitaines +2)
-        -- body, legs, feet, neck, back, rings: stays as base idle (no GEO-equippable pet upgrades known)
+        head  = "Bagua Galero +2",          -- Luopan HP+500 (overrides Azimuth Hood +2 — Galero's raw HP wins spike survival vs Hood's Luopan Regen+4)
+        hands = "Geomancy Mitaines +3",     -- Luopan: Damage Taken -13% + PDT-3% (overrides Azimuth Gloves +2 — pet idle prioritizes pet DT over player DT; +3 also adds small player PDT)
+        feet  = "Bagua Sandals +3",         -- Luopan Regen+5 (overrides base idle's Gaiters +2 — pet idle prioritizes pet survival over player DT)
+        back  = Nantosuelta_Pet,            -- Pet:Regen+15 total (overrides Solo cape's PDT-10% — luopan-out idle wants max pet regen)
+        -- body, legs, neck, rings: stays as base idle (no GEO-equippable pet upgrades known)
     })
-    sets.idle.PDT.Pet = set_combine(sets.idle.PDT, {
-        head  = "Bagua Galero +2",
-        hands = "Geo. Mitaines +1",
-    })
+    -- PDT mode with pet out: inherits sets.idle.PDT's Nyame body/legs (player DT priority) but
+    -- swaps the cape back to Nantosuelta_Pet for max luopan regen. Rationale: pet body/legs
+    -- pieces (Galero/Geo.Mitaines/Sandals) don't contribute to player DT so we keep them out
+    -- of PDT mode, but the cape's Pet:Regen+5 vs PDT-10% trade is per-rule: luopan out = Pet cape.
+    -- (For pet-survival idle without the player-DT compromise, stay IdleMode=Normal with luopan
+    -- out → sets.idle.Pet handles full pet-stack.)
+    sets.idle.PDT.Pet = set_combine(sets.idle.PDT, { back = Nantosuelta_Pet })
 
     -- Indi-active overlay: job_aftercast appends 'Indi' to classes.CustomIdleGroups when an Indi-* spell lands.
     -- Mote's get_idle_set walks down into sets.idle[...].Indi if that tier exists. Currently we have no Indi-
@@ -644,27 +776,14 @@ function init_gear_sets()
     --   sets.idle.Pet.Indi = set_combine(sets.idle.Pet, { neck = "Some Indi-bonus Neck" })
 
     -- =============================================================================
-    -- ENGAGED (rare for GEO, but Black Halo / Cataclysm routes exist)
+    -- ENGAGED — aliased to idle until a real TP set is built.
     -- =============================================================================
-    sets.engaged = {
-        main  = "Solstice",                 -- TODO: if you build Black Halo / Naegling later
-        sub   = "Genbu's Shield",           -- has — lvl 74 sub, PDT-10%; upgrade target: Genmei Shield
-        range = "Dunna",                    -- has R15 — locked; ammo slot left empty (collides with range on GEO)
-                                            -- If you ever decide melee TP > Dunna utility, swap to ammo = "Coiste Bodhar".
-        head  = "Nyame Helm",
-        body  = "Nyame Mail",
-        hands = "Nyame Gauntlets",
-        legs  = "Nyame Flanchard",
-        feet  = "Nyame Sollerets",
-        neck  = "Bagua Charm +2",
-        waist = "Fotia Belt",
-        left_ear  = "Mache Earring +1",     -- has
-        right_ear = "Telos Earring",        -- TODO
-        left_ring  = "Chirich Ring +1",     -- has
-        right_ring = "Petrov Ring",         -- has
-        back  = Nantosuelta,
-    }
-    sets.engaged.PDT = set_combine(sets.engaged, {})
+    -- GEO rarely melees. Until you commit to a weapon path (Black Halo club / Naegling sword / etc.),
+    -- engaged mirrors idle so you keep player DT, Refresh, and Haste while swinging.
+    -- Table alias: sets.engaged IS sets.idle (so .Pet / .Indi sub-tables inherit too).
+    -- TODO: when you start meleeing regularly, build a real TP set (Haste cap + STP + Acc).
+    sets.engaged     = sets.idle
+    sets.engaged.PDT = sets.idle.PDT
 
     -- =============================================================================
     -- DEFENSE / TOGGLES
@@ -694,10 +813,13 @@ end
 -- Hook functions for job-specific events.
 -------------------------------------------------------------------------------------------------------------------
 
--- Tell Mote that Indi-* spells use the 'Indi' spellMap so sets.midcast.Geomancy.Indi resolves.
+-- Tell Mote that Indi-*/Geo-* spells use the 'Indi'/'Geo' spellMaps so
+-- sets.midcast.Geomancy.Indi / sets.midcast.Geomancy.Geo resolve.
 function job_get_spell_map(spell, default_spell_map)
     if spell.english:startswith('Indi-') then
         return 'Indi'
+    elseif spell.english:startswith('Geo-') then
+        return 'Geo'
     end
     return default_spell_map
 end
@@ -821,12 +943,22 @@ function job_self_command(cmdParams, eventArgs)
                 hud:hide()
             elseif sub == 'toggle' then
                 if hud:visible() then hud:hide() else hud:show() end
+            elseif sub == 'where' then
+                -- gs c hud where  — print the current rendered position (reflects mouse drags)
+                local x, y = windower.text.get_location(hud._name)
+                add_to_chat(122, string.format('[GEO] HUD is at (%d, %d). Run "gs c hud save" to persist.', x, y))
+            elseif sub == 'save' then
+                -- gs c hud save  — capture the current rendered position (post-drag) and persist it
+                local x, y = windower.text.get_location(hud._name)
+                save_hud_pos(x, y)
+                add_to_chat(122, string.format('[GEO] Saved current HUD position (%d, %d) — will load here next time.', x, y))
             elseif sub == 'pos' then
-                -- gs c hud pos <x> <y>  — move HUD to absolute coordinates
+                -- gs c hud pos <x> <y>  — move HUD to absolute coordinates AND persist
                 local x, y = tonumber(cmdParams[3]), tonumber(cmdParams[4])
                 if x and y then
                     hud:pos(x, y)
-                    add_to_chat(122, string.format('[GEO] HUD moved to (%d, %d)', x, y))
+                    save_hud_pos(x, y)
+                    add_to_chat(122, string.format('[GEO] HUD moved to (%d, %d) and saved.', x, y))
                 else
                     add_to_chat(123, '[GEO] Usage: gs c hud pos <x> <y>')
                 end

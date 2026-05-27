@@ -35,7 +35,7 @@
             <target>false</target>
         </party>
         <alliance> <!-- An alliance member is doing something -->
-            <melee>false</melee>
+            <melee>true</melee>
             <ranged>false</ranged>
             <damage>false</damage>
             <healing>false</healing>
