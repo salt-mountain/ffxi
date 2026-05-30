@@ -102,6 +102,7 @@ function on_action(action)
 							end
 							if rollNum == 12 and Cor_Rolls[rollID].bust  ~= "?" then
 								buff_potency[1] = Cor_Rolls[rollID].bust * cc_bonus
+								if rollID == 304 then buff_potency[2] = Cor_Rolls[rollID].bust * cc_bonus end
 							elseif Cor_Rolls[rollID].roll[rollNum] ~= "?" then
 								if rollID == 304 then
 									local hpval = (Cor_Rolls[rollID].roll[rollNum][1] + (Cor_Rolls[rollID]["roll+1"][1] * Roll_bonus)) * cc_bonus
@@ -133,8 +134,12 @@ function on_action(action)
 									-- else
 										-- assume others use emperean equipment for boosting said rolls							
 										if rollID == 304 then
-											buff_potency[1] = buff_potency[1] + Cor_Rolls[rollID]['bonus'].effect
-											buff_potency[2] = buff_potency[2] + Cor_Rolls[rollID]['bonus'].effect
+											if type(buff_potency[1]) == 'number' then
+												buff_potency[1] = buff_potency[1] + Cor_Rolls[rollID]['bonus'].effect
+											end
+											if type(buff_potency[2]) == 'number' then
+												buff_potency[2] = buff_potency[2] + Cor_Rolls[rollID]['bonus'].effect
+											end
 										else
 											--print('entred 1')
 											if buff_potency[1] ~= '?' then
