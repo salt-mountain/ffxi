@@ -2,11 +2,13 @@
           Custom commands:
 
           Toggle Function:
-          gs c toggle idlemode            Toggles between TP, DT, TH, and MOVE idle modes
+          gs c toggle idlemode            Toggles between TP, DT, TH, MOVE, and SKILL idle modes
           gs c toggle tpmode              Toggles TP mode on / off
           gs c toggle dtmode              Toggles DT (Damage Taken) mode on / off
           gs c toggle thmode              Toggles TH (Treasure Hunter) mode on / off
+          gs c toggle th2mode             Toggles TH2 (max Treasure Hunter + Shneddick mobility) mode on / off
           gs c toggle movemode            Toggles MOVE mode on / off
+          gs c toggle skillmode           Toggles SKILL mode (Marksmanship training: Temachtiani + Musketoon/Bronze Bullet)
 
           HUD Functions:
           gs c hud hide                   Toggles the Hud entirely on or off
@@ -29,7 +31,7 @@ include('Modes.lua')
 
 -- Define your modes:
 -- You can add or remove modes in the table below, they will get picked up in the cycle automatically.
-idleModes = M('tp', 'dt', 'th', 'move')
+idleModes = M('tp', 'dt', 'th', 'th2', 'move', 'skill')
 
 -- Setting this to true will stop the text spam, and instead display modes in a UI.
 use_UI = true
@@ -46,6 +48,8 @@ windower.send_command('bind f10 gs c toggle tpmode') -- F10 to toggle TP mode
 windower.send_command('bind f11 gs c toggle dtmode') -- F11 to toggle DT mode
 windower.send_command('bind f12 gs c toggle thmode') -- F12 to toggle TH mode
 windower.send_command('bind !f9 gs c toggle movemode') -- Alt-F9 to toggle MOVE mode
+windower.send_command('bind !f10 gs c toggle skillmode') -- Alt-F10 to toggle SKILL (marksmanship training) mode
+windower.send_command('bind !f11 gs c toggle th2mode') -- Alt-F11 to toggle TH2 (max TH + mobility) mode
 
 --[[
       This gets passed in when the Keybinds is turned on.
@@ -59,6 +63,7 @@ keybinds_on['key_bind_tp'] = '(F10)'
 keybinds_on['key_bind_dt'] = '(F11)'
 keybinds_on['key_bind_th'] = '(F12)'
 keybinds_on['key_bind_move'] = '(ALT-F9)'
+keybinds_on['key_bind_skill'] = '(ALT-F10)'
 
 -- Remember to unbind your keybinds on job change.
 function user_unload()
@@ -67,6 +72,8 @@ function user_unload()
     send_command('unbind f11')
     send_command('unbind f12')
     send_command('unbind !f9')
+    send_command('unbind !f10')
+    send_command('unbind !f11')
 end
 
 --------------------------------------------------------------------------------------------------------------
@@ -207,8 +214,8 @@ function get_sets()
         --sub = "Sandung",
         ammo="Aurgelmir Orb",
         head="Nyame Helm",
-        body="Nyame Mail",
-        hands="Nyame Gauntlets",
+        body="Malignance Tabard",   -- was Nyame Mail. DT-9% identical to Nyame; gains Haste+1%, Store TP+11, Acc+10, DEX+25, PDL+6% (2026-05-31)
+        hands="Malignance Gloves",  -- was Nyame Gauntlets. DT-5% (was -7%, costs 2% DT); gains Haste+1%, Store TP+12, Acc+10, DEX+14, PDL+4%. Generic DT now -36% (still under -50% cap) (2026-05-31)
         legs="Nyame Flanchard",
         feet="Nyame Sollerets",
         neck={ name="Asn. Gorget +1", augments={'Path: A',}},
@@ -220,10 +227,46 @@ function get_sets()
         back={ name="Toutatis's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Store TP"+10','Phys. dmg. taken-10%',}},
     })
 
+    -- TH2 Mode - High Treasure Hunter without tanking stats. Separate from `th` (DT-prioritized for Lilith).
+    -- Built on the th set, overlaying the high-TH pieces that keep real stats (BGWiki-verified):
+    --   Plun. Armlets +3 (hands) TH+4 | Skulk. Poulaines +2 (feet) TH+4 | Sandung (sub) TH+1 = TH+9
+    -- Head intentionally LEFT as th's Nyame Helm: Wh. Rarab Cap +1 is only TH+1 for a big stat loss.
+    sets.me.idle.th2 = set_combine(sets.me.idle.th, {
+        sub  = "Sandung",                 -- TH+1 (replaces Shijo; note: drops Dual Wield/Triple Atk)
+        hands = "Plun. Armlets +3",       -- TH+4
+        feet = "Skulk. Poulaines +2",     -- TH+4
+        left_ring  = "Chirich Ring +1",   -- keep one Chirich
+        right_ring = "Shneddick Ring",    -- movement speed +18% (drops the 2nd Chirich for mobility)
+    })
+
     -- MOVE Mode - Combines base idle with movement gear
     sets.me.idle.move = set_combine(sets.me.idle.tp, sets.me.idle.movement, {
         -- Add any additional movement-specific overrides here
     })
+
+    -- SKILL Mode - Marksmanship skill-up. Temachtiani set boosts skill-up rate;
+    -- Musketoon (gun) in the ranged slot + Bronze Bullet ammo so you can /ra to gain skill.
+    -- This is a standalone set (not built on the TP set) so nothing overrides the skill-up gear.
+    -- Toggle with Alt-F10 (or cycle via F9); stays on because choose_set re-applies the
+    -- current idleMode after every shot/aftercast.
+    sets.me.idle.skill = {
+        main  = "Tauret",
+        sub   = { name="Shijo", augments={'DEX+15','"Dual Wield"+5','"Triple Atk."+2',}},
+        range = "Flagellant's crossbow",
+        ammo  = "Blind Bolt",
+        head  = "Guide Beret",
+        body  = "Malignance Tabard",
+        hands = "Pill. Armlets +3",
+        legs  = "Temachtiani Pants",
+        feet  = "Temachtiani Boots",
+        neck  = "Null Loop",
+        waist = "Null Belt",
+        left_ear  = "Skulk. Earring +1",
+        right_ear = "Skulker's Earring",
+        left_ring  = "Shneddick Ring",
+        right_ring = "Jubilee Ring",
+        back  = "Null Shawl",
+    }
 
     -----------------------------------------------------------------------------
     -- ENGAGED SETS - Melee combat sets that also use mode combinations
@@ -248,10 +291,16 @@ function get_sets()
         -- Maintain TH while in melee
     })
 
+    -- Engaged TH2 Set - mirror idle.th2 so the high-TH + mobility gear persists in melee.
+    sets.me.engaged.th2 = sets.me.idle.th2
+
     -- Engaged MOVE Set
     sets.me.engaged.move = set_combine(sets.me.idle.movement, {
         -- Add engaged movement gear here if different
     })
+
+    -- Engaged SKILL Set - mirror idle.skill so the skill-up gear persists even if you get engaged.
+    sets.me.engaged.skill = sets.me.idle.skill
 
     -----------------------------------------------------------------------------
     -- WEAPON SKILL SETS
@@ -425,10 +474,20 @@ end
 
 function choose_set()
     -- Determine which set to equip based on current status and mode
+    local set
     if player.status == 'Engaged' then
-        equip(sets.me.engaged[idleModes.current])
+        set = sets.me.engaged[idleModes.current]
     else
-        equip(sets.me.idle[idleModes.current])
+        set = sets.me.idle[idleModes.current]
+    end
+    equip(set)
+    -- Work around GearSwap's duplicate-ring quirk: when a set requests the SAME ring
+    -- in both slots, GearSwap won't seat the 2nd copy if an identical one is already
+    -- worn (e.g. after a WS that left Mummu Ring in the right slot + Chirich in the
+    -- left). Clearing both ring slots then re-applying forces both copies to seat.
+    if set and set.left_ring and set.right_ring and set.left_ring == set.right_ring then
+        equip({left_ring = empty, right_ring = empty})
+        equip({left_ring = set.left_ring, right_ring = set.right_ring})
     end
 end
 
@@ -446,6 +505,10 @@ function self_command(command)
         idleModes:set('dt')
         add_to_chat(123, 'DT Mode: ON')
         choose_set()
+    elseif command == 'toggle th2mode' then
+        idleModes:set('th2')
+        add_to_chat(123, 'TH2 Mode: ON (max TH + mobility)')
+        choose_set()
     elseif command == 'toggle thmode' then
         idleModes:set('th')
         add_to_chat(123, 'TH Mode: ON')
@@ -453,6 +516,10 @@ function self_command(command)
     elseif command == 'toggle movemode' then
         idleModes:set('move')
         add_to_chat(123, 'MOVE Mode: ON')
+        choose_set()
+    elseif command == 'toggle skillmode' then
+        idleModes:set('skill')
+        add_to_chat(123, 'SKILL Mode: ON (Marksmanship training)')
         choose_set()
     end
 end

@@ -214,6 +214,20 @@
                 <4>Koru-Moru</4>
                 <5>Iroha II</5>
             </organ>
+            <rem>
+                <1>Brygid</1>
+                <2>Koru-Moru</2>
+                <3>Apururu (UC)</3>
+                <4>Mihli Aliapoh</4>
+                <5>Valaineral</5>
+            </rem>
+            <rem2>
+                <1>AATT</1>
+                <2>August</2>
+                <3>Apururu (UC)</3>
+                <4>Joachim</4>
+                <5>Koru-Moru</5>
+            </rem2>
             <rua>
                 <1>Apururu (UC)</1>
                 <2>AAEV</2>
@@ -248,9 +262,8 @@
             </schultz>
             <skillup>
                 <1>Moogle</1>
-                <2>Ulmia</2>
-                <3>Sakura</3>
-                <4>Balamor</4>
+                <2>Sakura</2>
+                <3>Kuyin Hathdenna</3>
             </skillup>
             <solo>
                 <1>Apururu (UC)</1>
@@ -300,6 +313,13 @@
                 <4>Koru-Moru</4>
                 <5>Semih Lafihna</5>
             </xp2>
+            <xpnokoru>
+                <1>Kupofried</1>
+                <2>Apururu (UC)</2>
+                <3>Valaineral</3>
+                <4>Shantotto II</4>
+                <5>Semih Lafihna</5>
+            </xpnokoru>
             <xppassive>
                 <1>Apururu (UC)</1>
                 <2>Kupofried</2>

@@ -273,7 +273,7 @@ These are the upgrades that change *the most slots in the most sets* per unit of
 | head | Vanya Hood (Path D, +10% FC) | Amalric Coif (FC+10%, +Refresh) | tied FC, +Refresh utility |
 | body | Vanya Robe (Path C, no FC) | Anhur Robe (FC+10%) or Inyanga Jubbah (BLOCKED — WHM/BRD/SMN only) | +10% |
 | hands | Vanya Cuffs (Path B; Cure cast -7%, no generic FC) | Geomancy Mitaines +3 (Path C augment may add FC; unverified) | TBD |
-| legs | Vanya Slops base (0 FC) | **Geomancy Pants +3 (FC+15%)** | **+15%** |
+| legs | **Geomancy Pants +3 (FC+15%)** ✅ DONE 2026-05-30 — was Vanya Slops (0 FC) | (no further upgrade) | **+15% applied** |
 | feet | Vanya Clogs (Path D, +10% FC) | Carmine Greaves +1 (FC+8%, less than Vanya) | downgrade — keep Vanya |
 | neck | (placeholder) | Voltsurge Torque (+4% FC) | +4% |
 | waist | Embla Sash (+5% FC) | (no clear upgrade) | — |
@@ -283,7 +283,9 @@ These are the upgrades that change *the most slots in the most sets* per unit of
 | ring2 | (placeholder) | Lebeche Ring (Cure pot, no FC) — wrong slot | move to Cure |
 | back | Nantosuelta (0 FC, pet aug) | Lifestream Cape (+7% FC, +Geomancy) — for Indi only | +7% on Indi |
 
-**Path**: Geomancy Pants +3 → Voltsurge Torque → Kishar Ring → Etiolation Earring → Genmei Shield → Lifestream Cape for Indi.
+**Current owned gear FC ≈ 54%** — Solstice 5 + Dunna 3 + Vanya Hood 10 + **Geomancy Pants +3 (15)** + Vanya Clogs 10 + Embla Sash 5 + Loquacious 2 + Malignance Earring 4. (Voltsurge Torque, Kishar Ring, Etiolation Earring, Lebeche Ring = still TODO / not owned, so they currently contribute 0.) Acquiring Voltsurge Torque (+4) and Kishar Ring (+4) → ~62%. Cast-time reduction caps at **80% total** (gear FC + your /RDM Fast Cast trait, which stacks on top of gear).
+
+**Path**: ~~Geomancy Pants +3~~ ✅ DONE → Voltsurge Torque → Kishar Ring → Etiolation Earring → Genmei Shield → Lifestream Cape for Indi.
 
 ### sets.midcast.Cure (Cure midcast)
 
