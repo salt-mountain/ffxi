@@ -54,4 +54,12 @@
             </pos>
         </text_box_settings>
     </cevapi>
+    <saltmountain>
+        <text_box_settings>
+            <pos>
+                <x>1896</x>
+                <y>19</y>
+            </pos>
+        </text_box_settings>
+    </saltmountain>
 </settings>

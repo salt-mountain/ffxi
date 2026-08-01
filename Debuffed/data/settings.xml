@@ -63,4 +63,10 @@
             <y>110</y>
         </pos>
     </cevapi>
+    <saltmountain>
+        <pos>
+            <x>2100</x>
+            <y>71</y>
+        </pos>
+    </saltmountain>
 </settings>

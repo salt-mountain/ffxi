@@ -48,4 +48,11 @@
         </pos>
         <size>48</size>
     </cevapi>
+    <saltmountain>
+        <pos>
+            <x>3300</x>
+            <y>1500</y>
+        </pos>
+        <size>48</size>
+    </saltmountain>
 </settings>
