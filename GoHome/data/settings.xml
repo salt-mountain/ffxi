@@ -1,0 +1,20 @@
+<?xml version="1.1" ?>
+<settings>
+    <global>
+        <allowed_senders>
+            <1>Aurievaryn</1>
+        </allowed_senders>
+        <cooldown_seconds>30</cooldown_seconds>
+        <item_name>Instant Warp</item_name>
+        <jitter_max>4</jitter_max>
+        <jitter_min>1.5</jitter_min>
+        <reply_on_missing>true</reply_on_missing>
+        <trigger_phrase>go home</trigger_phrase>
+    </global>
+    <cevapi>
+        <allowed_senders>
+            <1>Aurievaryn</1>
+            <2>Someone</2>
+        </allowed_senders>
+    </cevapi>
+</settings>
