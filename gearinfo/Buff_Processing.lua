@@ -281,7 +281,8 @@ function check_buffs()
 					end
 				end
 			end
-			if v.geo and v.geo.id and v.mob and v.mob.pet_index and windower.ffxi.get_mob_by_index(v.mob.pet_index).distance:sqrt() < 6 and Geo_Spells[v.geo.id].buff.id == buff.id then
+			local geo_pet = v.geo and v.geo.id and v.mob and v.mob.pet_index and windower.ffxi.get_mob_by_index(v.mob.pet_index)
+			if geo_pet and geo_pet.distance and geo_pet.distance:sqrt() < 6 and Geo_Spells[v.geo.id].buff.id == buff.id then
 				local boost = 0
 				if table.containskey(settings.Geos, member_name:lower()) then
 					if settings.Geos[member_name:lower()] then 
