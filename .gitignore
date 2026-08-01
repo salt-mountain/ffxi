@@ -4,6 +4,9 @@ XIPivot/
 # equipviewer — local cache of equipment icon BMPs (regenerates from gear use)
 equipviewer/icons/
 
+# Ignore the GearInfo data files
+gearinfo/data/*
+
 # OS junk
 Thumbs.db
 ehthumbs.db
