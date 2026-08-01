@@ -377,7 +377,7 @@ function init_gear_sets()
     --   Malignance Earring   : +4% FC + INT+8 + MND+8 + MAcc+10 + MAB+8
     --   Total confirmed      : 39% FC. Cast-time-cap is -80%; gap closes with TODO accessories + Indi-Haste buff.
     sets.precast.FC = {
-        main  = "Solstice",             -- has Path D R15 — +5% FC
+        main  = "Solstice",             -- has Path D R15 — +5% FC. KEPT over Idris here: Idris has NO Fast Cast, so swapping would lose 5% FC in the precast set. (Idris is used in Geomancy/idle/Enhancing instead.)
         sub   = "Genbu's Shield",       -- has — lvl 74 mage shield, PDT-10%. Upgrade target: Genmei Shield (lvl 99, Genbu Geas Fete Escha Ru'Aun)
         range = "Dunna",                -- has R15 — +3% FC (Dunna lives in the range slot, not ammo)
         head  = "Vanya Hood",           -- has Path D — +10% FC
@@ -491,7 +491,7 @@ function init_gear_sets()
     -- MIDCAST: Enhancing Magic (/RDM sub gives Phalanx, Haste II, Bar spells, Refresh II)
     -- =============================================================================
     sets.midcast['Enhancing Magic'] = {
-        main  = "Solstice",
+        main  = "Idris",                    -- has (R15) — Geomancy+10, MAcc+40 (no FC needed here; Solstice's FC+5% only matters in precast.FC)
         sub   = "Genbu's Shield",           -- has — lvl 74 sub, PDT-10%; upgrade target: Ammurapi Shield (Enh.Mag duration+10%)
         range = "Dunna",                    -- has R15 — locked; ammo slot left empty (collides with range on GEO)
         head  = "Azimuth Hood +3",          -- has (acquired 2026-05-30) — Geomancy skill+25, Haste+6%, Full Circle+4, DT-12%, MAB+51, MAcc+61 (BGWiki-verified per UPGRADES.md)
@@ -629,7 +629,7 @@ function init_gear_sets()
     -- =============================================================================
     -- Base is the "skill cap" stack. Indi overlay adds duration without losing skill.
     sets.midcast.Geomancy = {
-        main  = "Solstice",                 -- has — Path D R15. KEEP for GEO: base Handbell skill+5 (boosts Geo-* / Indi-* potency) + Indicolure dur+15. Daybreak has MD+241 but zero Handbell skill / zero Indi dur — wrong tool for Geomancy
+        main  = "Idris",                    -- has (R15, acquired 2026-07-31). Skill is CAPPED: combined Handbell+Geomancy is already >900 without Solstice's +5, so that skill is wasted overflow — the real win is Idris's other effects: Luopan: DT-25%, MAcc+40, MAB+40, MD+217, Geomancy+10. Losing Solstice's Indi dur+15 doesn't change potency (still capped). Idris wins here for Geo- AND Indi-.
         sub   = "Genbu's Shield",           -- has — lvl 74 sub, PDT-10%; upgrade target: Genmei Shield
         range = "Dunna",                    -- has — Geomancy +5 + R15 augments (Dunna is range slot, not ammo)
         head  = "Azimuth Hood +3",          -- has (acquired 2026-05-30) — Geomancy skill +25 (was +20 on +2), DT-12%, Full Circle+4, Luopan Regen+5, Haste+6%, MAcc+61, MAB+51
@@ -678,7 +678,7 @@ function init_gear_sets()
     -- Base idle uses gear you currently own (verified against /gs export 2026-05-13).
     -- TODO upgrades are noted in comments; they don't replace slot values until acquired.
     sets.idle = {
-        main  = "Solstice",
+        main  = "Idris",                    -- has (R15) — Luopan: DT-25% (vs Solstice Path D's Pet:DT-4%): huge pet survival at idle + Geomancy+10.
         sub   = "Genbu's Shield",           -- has — lvl 74 sub, PDT-10%. Upgrade target: Genmei Shield (Genbu, Escha Ru'Aun Geas Fete) for the same -10% PDT at item lvl 119.
         range = "Dunna",                    -- has R15 — locked. On GEO the ammo slot collides with range, so
                                             --   we never define ammo in any set. Homiliary (Limbus, Refresh+1)
