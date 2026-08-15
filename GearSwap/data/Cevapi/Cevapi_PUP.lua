@@ -109,7 +109,8 @@ end
 -- Gear sets.
 -------------------------------------------------------------------------------------------------------------------
 function init_gear_sets()
-    -- Mecisto. Mantle (CP cape) — still used by the idle sets.
+    -- Mecisto. Mantle (CP cape) — currently UNUSED (idle wears Visucius's Mantle like the TP set).
+    -- Kept here so a future CP toggle (see the GEO file's `gs c toggle CP`) can just reference it.
     local Mecisto_CP = { name="Mecisto. Mantle", augments={
         'Cap. Point+30%', 'HP+25', 'Rng.Acc.+1', 'DEF+8',
     }}
@@ -213,7 +214,10 @@ function init_gear_sets()
     -- Full Malignance body set (Haste/STP/Acc/DT), Moonbow Belt +1, Visucius's Mantle.
     -- Solo/no-automaton melee set, not pet-focused. Tune from here.
     -- =============================================================================
-    sets.engaged = {
+    -- Held in a local so sets.idle can reuse the exact same gear without aliasing the table.
+    -- (`sets.idle = sets.engaged` would make them ONE table — the later sets.idle.PDT assignment
+    -- would then silently overwrite sets.engaged.PDT. set_combine copies, so they stay separate.)
+    local TP_gear = {
         main  = "Karambit",          -- has — starter H2H. TODO: real H2H (Kenkonken / Verethragna / Godhands)
         range = "Animator P II +1",  -- pet command device (keep equipped so automaton commands work)
         -- ammo: with the Animator in range, only PUP ammo (Automaton Oil / Repair Kit) is allowed here
@@ -231,6 +235,8 @@ function init_gear_sets()
         back  = Visucius_TP,         -- has (export 2026-08-15) — PUP JSE cape, STR/Acc/Att/DA augments
     }
 
+    sets.engaged = set_combine(TP_gear, {})
+
     sets.engaged.Acc = set_combine(sets.engaged, {
         -- Already accuracy-leaning (Mache Earring +1). Add more Acc here if you're still missing.
     })
@@ -247,29 +253,24 @@ function init_gear_sets()
 
     -- =============================================================================
     -- IDLE (master, no pet or pet-agnostic)
+    -- Same gear as the TP set (your choice 2026-08-15). Malignance is already DT-heavy
+    -- (-9/-7/-6/-5/-4 across the set), so idling in it keeps real mitigation while your gear stays
+    -- consistent whether you're standing, running, or fighting. This is also why "my belt and cape
+    -- aren't equipping" — the old idle set had the Null Belt / Mecisto placeholders and Mote uses
+    -- idle whenever you're NOT engaged.
+    --   • Nyame DT shell now lives only in sets.idle.PDT — cycle to it with F11 (IdleMode).
+    --   • Mecisto. Mantle (CP cape) is no longer worn while idle. If you want CP banking back,
+    --     re-add a CP toggle like the GEO file's (gs c toggle CP → sets.CP overlay).
     -- =============================================================================
-    sets.idle = {
-        main  = "Karambit",
-        range = "Animator P II +1",  -- pet command device (keep equipped)
-        -- ammo: with the Animator in range, only PUP ammo (Automaton Oil / Repair Kit) is allowed here
-        head  = "Nyame Helm",
-        body  = "Malignance Tabard",
-        hands = "Nyame Gauntlets",   -- swap to a DT/Haste body of Nyame for idle survivability
-        legs  = "Nyame Flanchard",
-        feet  = "Nyame Sollerets",
-        neck  = "Null Loop",         -- placeholder; TODO DT neck
-        waist = "Null Belt",         -- placeholder; TODO DT/HP waist
-        left_ear  = "Brutal Earring",
-        right_ear = "Mache Earring +1",
-        left_ring  = "Chirich Ring +1",
-        right_ring = "Chirich Ring +1",
-        back  = Mecisto_CP,
-    }
+    sets.idle = set_combine(TP_gear, {})
 
-    -- PDT idle — full Nyame DT shell.
+    -- PDT idle — full Nyame DT shell. F11 cycles IdleMode Normal → PDT.
     sets.idle.PDT = set_combine(sets.idle, {
-        body  = "Nyame Mail",
-        hands = "Nyame Gauntlets",
+        head  = "Nyame Helm",        -- DT-7%
+        body  = "Nyame Mail",        -- DT-9%
+        hands = "Nyame Gauntlets",   -- DT-7%
+        legs  = "Nyame Flanchard",   -- DT-8%
+        feet  = "Nyame Sollerets",   -- DT-7%
     })
 
     -- =============================================================================
