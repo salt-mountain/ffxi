@@ -23,7 +23,10 @@
 --     so automaton commands (Deploy/Retrieve/Maneuvers) work. ammo slot is left free.
 --
 -- Keybinds (set in user_setup, cleared in user_unload):
---   F9   cycle OffenseMode    (Normal / Acc)
+--   F9   toggle TravelMode    — OFF = normal TP/idle sets, ON = overlays sets.Travel
+--                               (Shneddick Ring move speed +18% + Warp Ring escape). Works while
+--                               idle and while engaged.
+--   ^F9  cycle OffenseMode    (Normal / Acc)   — moved off plain F9 to make room for Travel
 --   F10  cycle HybridMode     (Normal / PDT)   — master damage-taken stance
 --   F11  cycle IdleMode       (Normal / PDT)
 --   F12  cycle PetMode        (Normal / Acc)   — automaton offense bias (placeholder use)
@@ -31,6 +34,8 @@
 --   ^F12 gs c update          (force re-equip)
 --
 -- //gs c commands:
+--   gs c toggle TravelMode  — same as F9
+--   gs c lockstyle          — re-apply lockstyle set 20 (auto-applied on file load)
 --   gs c update      — re-equip current sets
 -------------------------------------------------------------------------------------------------------------------
 
@@ -68,11 +73,23 @@ function user_setup()
     -- here so you can build sets.engaged.Pet.Acc / sets.idle.Pet.Acc later without re-plumbing.
     state.PetMode = M('Normal', 'Acc')
 
+    -- Travel Mode (F9). Boolean toggle, not a cycle — ON overlays sets.Travel (Shneddick Ring for
+    -- movement speed + Warp Ring for the escape enchantment) on top of whatever set is active,
+    -- idle OR engaged. OFF returns you to the plain TP/idle set. Applied in customize_idle_set /
+    -- customize_melee_set below. M(false, ...) makes `gs c toggle TravelMode` work via Mote.
+    state.TravelMode = M(false, 'Travel Mode')
+
     -- Macro setup — adjust book/sheet to your in-game PUP macros.
     set_macro_page(1, 6)    -- Sheet 1, Book 6 (CHANGE to your PUP macro book)
 
+    -- Lockstyle. The `wait 3` matters: on a job change the game rejects /lockstyleset for a few
+    -- seconds while the job swap settles, and an early command silently does nothing. If it ever
+    -- misses (zoning, heavy lag), `gs c lockstyle` re-fires it.
+    send_command('wait 3; input /lockstyleset 20')
+
     -- Keybinds
-    send_command('bind F9 gs c cycle OffenseMode')
+    send_command('bind F9 gs c toggle TravelMode')   -- TP set <-> Travel (movement + Warp Ring)
+    send_command('bind ^F9 gs c cycle OffenseMode')  -- OffenseMode moved here off plain F9
     send_command('bind F10 gs c cycle HybridMode')
     send_command('bind F11 gs c cycle IdleMode')
     send_command('bind F12 gs c cycle PetMode')
@@ -83,7 +100,7 @@ end
 
 -- Called from Mote's file_unload — clean up our binds.
 function user_unload()
-    send_command('unbind F9; unbind F10; unbind F11; unbind F12; unbind ^F11; unbind ^F12')
+    send_command('unbind F9; unbind ^F9; unbind F10; unbind F11; unbind F12; unbind ^F11; unbind ^F12')
 end
 
 
@@ -91,9 +108,15 @@ end
 -- Gear sets.
 -------------------------------------------------------------------------------------------------------------------
 function init_gear_sets()
-    -- Mecisto. Mantle (CP cape) — from your current working TP export. TODO: Visucius's Mantle (PUP JSE).
+    -- Mecisto. Mantle (CP cape) — still used by the idle sets.
     local Mecisto_CP = { name="Mecisto. Mantle", augments={
         'Cap. Point+30%', 'HP+25', 'Rng.Acc.+1', 'DEF+8',
+    }}
+
+    -- Visucius's Mantle (PUP JSE cape) — acquired; TP augment path (STR/Acc/Att/DA).
+    -- From gs export 2026-08-15. This replaces Mecisto_CP in the TP set.
+    local Visucius_TP = { name="Visucius's Mantle", augments={
+        'STR+20', 'Accuracy+20 Attack+20', 'STR+10', '"Dbl.Atk."+10',
     }}
 
     -- =============================================================================
@@ -185,10 +208,9 @@ function init_gear_sets()
 
     -- =============================================================================
     -- MASTER MELEE (TP) — your character's auto-attack stance
-    -- This is your CURRENT WORKING TP SET (gs export 2026-06-22). It's a solo/no-automaton melee
-    -- set, not pet-focused — exactly what you've been playing. Tune from here.
-    --   Note: no Animator in range here because you're playing solo. When you start running the
-    --   automaton, swap range → "Animator" (or build sets.engaged.Pet) so pet commands work.
+    -- Rebuilt from gs export 2026-08-15 — this is exactly what you're wearing in game.
+    -- Full Malignance body set (Haste/STP/Acc/DT), Moonbow Belt +1, Visucius's Mantle.
+    -- Solo/no-automaton melee set, not pet-focused. Tune from here.
     -- =============================================================================
     sets.engaged = {
         main  = "Karambit",          -- has — starter H2H. TODO: real H2H (Kenkonken / Verethragna / Godhands)
@@ -200,12 +222,12 @@ function init_gear_sets()
         legs  = "Malignance Tights", -- has (acquired 2026-07-21) — Haste+9, STP+10, Acc+50, PDL+5%, DT-7%
         feet  = "Malignance Boots",  -- has (acquired 2026-07-26) — Haste+3, STP+9, Acc+50, PDL+2%, DT-4%
         neck  = "Null Loop",         -- placeholder; TODO Acc/STP neck
-        waist = "Null Belt",         -- placeholder; TODO DA/STP waist
+        waist = "Moonbow Belt +1",   -- has (export 2026-08-15) — replaces the Null Belt placeholder
         left_ear  = "Mache Earring +1",
         right_ear = "Brutal Earring",
         left_ring  = "Chirich Ring +1", -- has
         right_ring = "Chirich Ring +1", -- has
-        back  = Mecisto_CP,          -- TODO: Visucius's Mantle (PUP JSE)
+        back  = Visucius_TP,         -- has (export 2026-08-15) — PUP JSE cape, STR/Acc/Att/DA augments
     }
 
     sets.engaged.Acc = set_combine(sets.engaged, {
@@ -285,12 +307,34 @@ function init_gear_sets()
                                           -- with a TP/WS ring1; both engaged rings are Chirich +1,
                                           -- so this overlay drops one Chirich while moving.
     }
+
+    -- =============================================================================
+    -- TRAVEL MODE — F9 toggle (gs c toggle TravelMode). Overlays on idle AND engaged via
+    -- customize_idle_set / customize_melee_set. Drops both Chirich Ring +1 for the run.
+    -- This is a superset of sets.Kiting (which is movement only); Kiting on ^F11 still works,
+    -- and if both are on, Travel wins because customize_* runs after Mote's apply_kiting.
+    -- =============================================================================
+    sets.Travel = {
+        left_ring  = "Shneddick Ring",   -- Movement speed +18% (All Jobs), Resist Petrify/Bind/Gravity +15
+        right_ring = "Warp Ring",        -- no passive stats; the Warp enchantment is the escape button
+    }
 end
 
 
 -------------------------------------------------------------------------------------------------------------------
 -- Hook functions for job-specific events.
 -------------------------------------------------------------------------------------------------------------------
+
+-- `gs c lockstyle` — manually re-apply lockstyle set 20 if the automatic one on load was
+-- rejected (job change still settling, zoning, lag).
+function job_self_command(cmdParams, eventArgs)
+    if (cmdParams[1] or ''):lower() == 'lockstyle' then
+        send_command('input /lockstyleset 20')
+        add_to_chat(122, '[PUP] Re-applying lockstyle set 20.')
+        eventArgs.handled = true
+    end
+end
+
 
 -- Keep H2H sub slot empty (H2H occupies main+sub). Prevents a stray grip/shield from a shared
 -- set leaking into PUP and breaking the H2H equip.
@@ -301,4 +345,22 @@ end
 -- Optional: if you later add pet-mode-aware swapping, branch here on pet.isvalid / pet.status.
 function job_handle_equipping_gear(playerStatus, eventArgs)
     -- placeholder
+end
+
+
+-- Travel Mode overlay (F9). Mote calls these at the end of get_idle_set / get_melee_set, so the
+-- rings go on over whatever idle/TP set was resolved, and come straight back off when toggled.
+function customize_idle_set(idleSet)
+    if state.TravelMode.value then
+        idleSet = set_combine(idleSet, sets.Travel)
+    end
+    return idleSet
+end
+
+
+function customize_melee_set(meleeSet)
+    if state.TravelMode.value then
+        meleeSet = set_combine(meleeSet, sets.Travel)
+    end
+    return meleeSet
 end
