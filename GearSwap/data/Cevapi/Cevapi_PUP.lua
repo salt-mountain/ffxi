@@ -23,9 +23,9 @@
 --     so automaton commands (Deploy/Retrieve/Maneuvers) work. ammo slot is left free.
 --
 -- Keybinds (set in user_setup, cleared in user_unload):
---   F9   toggle TravelMode    — OFF = normal TP/idle sets, ON = overlays sets.Travel
---                               (Shneddick Ring move speed +18% + Warp Ring escape). Works while
---                               idle and while engaged.
+--   F9   cycle PlayMode       — switches between 'TP' (normal TP/idle sets) and 'Travel'
+--                               (sets.Travel: Shneddick Ring move speed +18% + Warp Ring escape).
+--                               Holds while idle and while engaged.
 --   ^F9  cycle OffenseMode    (Normal / Acc)   — moved off plain F9 to make room for Travel
 --   F10  cycle HybridMode     (Normal / PDT)   — master damage-taken stance
 --   F11  cycle IdleMode       (Normal / PDT)
@@ -34,7 +34,7 @@
 --   ^F12 gs c update          (force re-equip)
 --
 -- //gs c commands:
---   gs c toggle TravelMode  — same as F9
+--   gs c cycle PlayMode     — same as F9 (TP <-> Travel)
 --   gs c lockstyle          — re-apply lockstyle set 20 (auto-applied on file load)
 --   gs c update      — re-equip current sets
 -------------------------------------------------------------------------------------------------------------------
@@ -73,11 +73,12 @@ function user_setup()
     -- here so you can build sets.engaged.Pet.Acc / sets.idle.Pet.Acc later without re-plumbing.
     state.PetMode = M('Normal', 'Acc')
 
-    -- Travel Mode (F9). Boolean toggle, not a cycle — ON overlays sets.Travel (Shneddick Ring for
-    -- movement speed + Warp Ring for the escape enchantment) on top of whatever set is active,
-    -- idle OR engaged. OFF returns you to the plain TP/idle set. Applied in customize_idle_set /
-    -- customize_melee_set below. M(false, ...) makes `gs c toggle TravelMode` work via Mote.
-    state.TravelMode = M(false, 'Travel Mode')
+    -- PlayMode (F9) — a two-position switch between your TP set and Travel:
+    --   'TP'     → normal TP / idle sets, untouched
+    --   'Travel' → sets.Travel over the top (Shneddick Ring move speed + Warp Ring escape)
+    -- F9 cycles TP → Travel → TP. Applied in customize_idle_set / customize_melee_set below, so
+    -- it holds whether you're standing or engaged.
+    state.PlayMode = M{['description'] = 'Play Mode', 'TP', 'Travel'}
 
     -- Macro setup — adjust book/sheet to your in-game PUP macros.
     set_macro_page(1, 6)    -- Sheet 1, Book 6 (CHANGE to your PUP macro book)
@@ -88,7 +89,7 @@ function user_setup()
     send_command('wait 3; input /lockstyleset 20')
 
     -- Keybinds
-    send_command('bind F9 gs c toggle TravelMode')   -- TP set <-> Travel (movement + Warp Ring)
+    send_command('bind F9 gs c cycle PlayMode')      -- switch TP set <-> Travel (movement + Warp Ring)
     send_command('bind ^F9 gs c cycle OffenseMode')  -- OffenseMode moved here off plain F9
     send_command('bind F10 gs c cycle HybridMode')
     send_command('bind F11 gs c cycle IdleMode')
@@ -309,10 +310,10 @@ function init_gear_sets()
     }
 
     -- =============================================================================
-    -- TRAVEL MODE — F9 toggle (gs c toggle TravelMode). Overlays on idle AND engaged via
+    -- TRAVEL — the 'Travel' half of PlayMode (F9). Applied over idle AND engaged via
     -- customize_idle_set / customize_melee_set. Drops both Chirich Ring +1 for the run.
     -- This is a superset of sets.Kiting (which is movement only); Kiting on ^F11 still works,
-    -- and if both are on, Travel wins because customize_* runs after Mote's apply_kiting.
+    -- and if both are active, Travel wins because customize_* runs after Mote's apply_kiting.
     -- =============================================================================
     sets.Travel = {
         left_ring  = "Shneddick Ring",   -- Movement speed +18% (All Jobs), Resist Petrify/Bind/Gravity +15
@@ -351,7 +352,7 @@ end
 -- Travel Mode overlay (F9). Mote calls these at the end of get_idle_set / get_melee_set, so the
 -- rings go on over whatever idle/TP set was resolved, and come straight back off when toggled.
 function customize_idle_set(idleSet)
-    if state.TravelMode.value then
+    if state.PlayMode.value == 'Travel' then
         idleSet = set_combine(idleSet, sets.Travel)
     end
     return idleSet
@@ -359,7 +360,7 @@ end
 
 
 function customize_melee_set(meleeSet)
-    if state.TravelMode.value then
+    if state.PlayMode.value == 'Travel' then
         meleeSet = set_combine(meleeSet, sets.Travel)
     end
     return meleeSet
