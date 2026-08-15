@@ -152,61 +152,68 @@ function init_gear_sets()
     }
 
     -- =============================================================================
-    -- WEAPON SKILLS (all Hand-to-Hand). Modifiers BGWiki-verified 2026-06-22:
-    --   Victory Smite   80% STR, 4 hits, crit% scales w/ TP   (needs Verethragna/Revenant Fists)
-    --   Stringing Pummel 32% STR/32% VIT, 6 hits              (PUP exclusive)
-    --   Shijin Spiral   73-85% DEX, 5 hits                    (lv93)
-    --   Asuran Fists    15% STR/15% VIT, 8 hits               (Acc-hungry, low mod)
-    --   Dragon Kick     50% STR/50% VIT, 2 hits
-    --   Howling Fist    50% VIT/20% STR, 2 hits
-    --   Spinning Attack 100% STR, 1 hit
-    -- Base set is the generic STR/multi-attack stack on owned gear; per-WS sets override below.
+    -- WEAPON SKILLS (all Hand-to-Hand)
+    --
+    -- BASE SET: full Nyame (its set bonus is Weapon Skill Damage — that's why WS uses Nyame and TP
+    -- uses Malignance), Fotia Gorget + Fotia Belt (both give +fTP, and the gorget/belt pair is the
+    -- standard WS neck/waist), and the SAME cape as the TP set (Visucius's Mantle) per your call.
+    --
+    -- Every PUP-usable H2H weapon skill below points at its OWN COPY of this base set, so you can
+    -- drop WS-specific pieces into any single entry later without touching the others.
+    --
+    -- Slot notes:
+    --   • range stays "Animator P II +1" — dropping it mid-WS would break pet commands on aftercast.
+    --   • no ammo line: with the Animator in range, the ammo slot only accepts PUP ammo (Automaton
+    --     Oil / Repair Kit). The old "Amar Cluster" here could never equip.
+    --   • Mache Earring +1 is deliberately NOT in this set. You own only one, and it lives in the TP
+    --     set's LEFT ear. Putting it in the WS RIGHT ear would force GearSwap to relocate a
+    --     single-copy item between slots on aftercast, which it can't do — leaving you stuck on
+    --     Moonshade instead of returning to Mache. (Same class of bug as the THF Chirich rings.)
+    --
+    -- WS LIST VERIFIED against BGWiki Hand-to-Hand weapon skill list (2026-08-15). Skill levels and
+    -- hit counts are from the in-game descriptions on that page.
+    --   REMOVED: 'Final Heaven' — it's the RELIC WS (Spharai / Heofon Knuckles) and is MONK ONLY.
+    --            PUP cannot use it; the old entry here was dead weight.
+    --   Not included, MNK-only: Ascetic's Fury (Glanzfaust mythic).
+    --
     -- TODO upgrades to look up when acquired: STR/WSD body+hands (Mpaca's / Herculean), DEX legs
     -- for Shijin Spiral, Caro Necklace (WS neck), Epaminondas's/Ilabrat ring (WSD), Gere Ring (DA).
     -- =============================================================================
-    sets.precast.WS = {
-        ammo  = "Amar Cluster",
+    local WS_base = {
+        range = "Animator P II +1",
         head  = "Nyame Helm",
         body  = "Nyame Mail",
         hands = "Nyame Gauntlets",
         legs  = "Nyame Flanchard",
         feet  = "Nyame Sollerets",
-        neck  = "Fotia Gorget",   -- +fTP to WS
-        waist = "Fotia Belt",
+        neck  = "Fotia Gorget",      -- +fTP to WS
+        waist = "Fotia Belt",        -- +fTP to WS
         left_ear  = { name="Moonshade Earring", augments={'TP Bonus +250'} },
         right_ear = "Brutal Earring",
         left_ring  = "Chirich Ring +1",
         right_ring = "Chirich Ring +1",
-        back  = Mecisto_CP,
+        back  = Visucius_TP,         -- same cape as the TP set, per your call
     }
 
-    -- Multi-hit WS (Asuran Fists 8, Stringing Pummel 6, Shijin Spiral 5, Victory Smite 4): each
-    -- hit must land, so accuracy matters more than raw WSD.
-    -- NOTE: deliberately does NOT swap in Mache Earring +1 here. You own only one Mache +1, and it
-    -- lives in engaged's LEFT ear. Putting it in the WS RIGHT ear forces GearSwap to relocate a
-    -- single-copy item between slots on aftercast, which it can't do — leaving you stuck on Moonshade
-    -- after a WS instead of returning to Mache. Keeping Mache out of WS means it's equipped fresh
-    -- into engaged-left every time, with no slot-move. (Same class of bug as the THF Chirich rings.)
-    sets.precast.WS.MultiHit = set_combine(sets.precast.WS, {
-        -- TODO: if you get a SECOND accuracy earring (not Mache/Moonshade), put it in right_ear here.
-    })
+    sets.precast.WS = set_combine(WS_base, {})
 
-    -- STR-modifier WS
-    sets.precast.WS['Victory Smite']   = sets.precast.WS.MultiHit   -- 4 hits, crit scales w/ TP
-    sets.precast.WS['Spinning Attack'] = sets.precast.WS            -- 1 hit, 100% STR → raw WSD
-    sets.precast.WS['Raging Fists']    = sets.precast.WS.MultiHit   -- 5 hits, STR
-    sets.precast.WS['Combo']           = sets.precast.WS.MultiHit   -- 3 hits, STR
+    -- --- Standard H2H weapon skills (available to PUP by skill level) --------------------------
+    sets.precast.WS['Combo']           = set_combine(WS_base, {})  -- skill 5,   threefold
+    sets.precast.WS['Shoulder Tackle'] = set_combine(WS_base, {})  -- skill 40,  twofold, stuns
+    sets.precast.WS['One Inch Punch']  = set_combine(WS_base, {})  -- skill 75,  twofold, ignores DEF (MNK/PUP)
+    sets.precast.WS['Backhand Blow']   = set_combine(WS_base, {})  -- skill 100, twofold, crit damage
+    sets.precast.WS['Raging Fists']    = set_combine(WS_base, {})  -- skill 125, fivefold (MNK/PUP)
+    sets.precast.WS['Spinning Attack'] = set_combine(WS_base, {})  -- skill 150, twofold AoE
+    sets.precast.WS['Howling Fist']    = set_combine(WS_base, {})  -- skill 200, twofold (MNK/PUP)
+    sets.precast.WS['Dragon Kick']     = set_combine(WS_base, {})  -- skill 225, twofold (MNK/PUP)
+    sets.precast.WS['Asuran Fists']    = set_combine(WS_base, {})  -- skill 250, eightfold, quest (MNK/PUP)
+    sets.precast.WS['Tornado Kick']    = set_combine(WS_base, {})  -- skill 300, threefold
+    sets.precast.WS['Shijin Spiral']   = set_combine(WS_base, {})  -- skill 357, fivefold + plague, quest (MNK/PUP)
 
-    -- STR/VIT-modifier WS
-    sets.precast.WS['Stringing Pummel'] = sets.precast.WS.MultiHit  -- 6 hits
-    sets.precast.WS['Dragon Kick']      = sets.precast.WS           -- 2 hits
-    sets.precast.WS['Asuran Fists']     = sets.precast.WS.MultiHit  -- 8 hits, very Acc-hungry
-    sets.precast.WS['Howling Fist']     = sets.precast.WS           -- 2 hits, VIT-lean
-    sets.precast.WS['Final Heaven']     = sets.precast.WS           -- 1 hit, VIT (needs relic H2H)
-
-    -- DEX-modifier WS
-    sets.precast.WS['Shijin Spiral'] = sets.precast.WS.MultiHit     -- 5 hits, 73-85% DEX
-        -- TODO: DEX-WSD legs (e.g. Lustratio Subligar +1 — verify PUP) when meleeing DEX builds
+    -- --- Weapon-locked H2H weapon skills PUP can access ---------------------------------------
+    sets.precast.WS['Victory Smite']    = set_combine(WS_base, {}) -- Empyrean: Verethragna (MNK/PUP)
+    sets.precast.WS['Stringing Pummel'] = set_combine(WS_base, {}) -- Mythic: Kenkonken (PUP only)
+    -- Shijin Spiral is also the Aeonic (Godhands) WS — same name, already covered above.
 
     -- =============================================================================
     -- MASTER MELEE (TP) — your character's auto-attack stance
