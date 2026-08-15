@@ -1,0 +1,18 @@
+sets.exported = {
+    main="Tauret",
+    sub={ name="Shijo", augments={'DEX+15','"Dual Wield"+5','"Triple Atk."+2',}},
+    range="Musketoon",
+    ammo="Bronze Bullet",
+    head="Guide Beret",
+    body="Malignance Tabard",
+    hands="Pill. Armlets +3",
+    legs="Temachtiani Pants",
+    feet="Temachtiani Boots",
+    neck="Null Loop",
+    waist="Null Belt",
+    left_ear={ name="Skulk. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+14','Mag. Acc.+14','"Store TP"+5',}},
+    right_ear={ name="Skulker's Earring", augments={'System: 1 ID: 1676 Val: 0','Accuracy+6','Mag. Acc.+6',}},
+    left_ring="Shneddick Ring",
+    right_ring="Jubilee Ring",
+    back="Null Shawl",
+}

@@ -1,0 +1,17 @@
+sets.exported = {
+    main={ name="Solstice", augments={'Mag. Acc.+20','Pet: Damage taken -4%','"Fast Cast"+5',}},
+    sub="Genbu's Shield",
+    range="Dunna",
+    head="Azimuth Hood +1",
+    body="Shamash Robe",
+    hands="Bagua Mitaines +2",
+    legs="Bagua Pants +2",
+    feet="Bagua Sandals +2",
+    neck={ name="Bagua Charm +2", augments={'Path: A',}},
+    waist="Embla Sash",
+    left_ear="Odnowa Earring",
+    right_ear="Alabaster Earring",
+    left_ring="Stikini Ring +1",
+    right_ring="Stikini Ring +1",
+    back={ name="Nantosuelta's Cape", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','Evasion+10','Pet: "Regen"+10','Pet: "Regen"+5',}},
+}

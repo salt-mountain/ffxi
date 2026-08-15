@@ -1,0 +1,17 @@
+sets.exported = {
+    main="Idris",
+    sub="Genbu's Shield",
+    range="Dunna",
+    head="Azimuth Hood +3",
+    body="Shamash Robe",
+    hands="Azimuth Gloves +2",
+    legs="Bagua Pants +2",
+    feet="Geo. Sandals +1",
+    neck={ name="Bagua Charm +2", augments={'Path: A',}},
+    waist="Embla Sash",
+    left_ear="Odnowa Earring",
+    right_ear="Alabaster Earring",
+    left_ring="Shneddick Ring",
+    right_ring="Warp Ring",
+    back={ name="Nantosuelta's Cape", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','Evasion+10','Pet: "Regen"+10','Phys. dmg. taken-10%',}},
+}

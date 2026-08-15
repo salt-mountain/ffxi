@@ -1,0 +1,17 @@
+sets.exported = {
+    main="Marin Staff +1",
+    sub="Clerisy Strap +1",
+    ammo="Staunch Tathlum +1",
+    head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+    body={ name="Kaykaus Bliaut +1", augments={'MP+80','"Cure" potency +6%','"Conserve MP"+7',}},
+    hands={ name="Kaykaus Cuffs +1", augments={'MP+80','"Conserve MP"+7','"Fast Cast"+4',}},
+    legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+    feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+    neck="Nodens Gorget",
+    waist="Witful Belt",
+    left_ear="Mendi. Earring",
+    right_ear="Magnetic Earring",
+    left_ring="Mephitas's Ring +1",
+    right_ring="Jhakri Ring",
+    back="Aptitude Mantle",
+}

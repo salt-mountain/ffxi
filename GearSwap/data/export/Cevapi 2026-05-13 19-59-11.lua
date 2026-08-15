@@ -1,0 +1,16 @@
+sets.exported = {
+    main={ name="Solstice", augments={'Mag. Acc.+20','Pet: Damage taken -4%','"Fast Cast"+5',}},
+    range="Dunna",
+    head="Geomancy Galero",
+    body="Bagua Tunic +1",
+    hands="Geo. Mitaines +1",
+    legs="Bagua Pants +2",
+    feet="Bagua Sandals +2",
+    neck={ name="Bagua Charm +2", augments={'Path: A',}},
+    waist="Embla Sash",
+    left_ear="Mendi. Earring",
+    right_ear="Magnetic Earring",
+    left_ring="Warp Ring",
+    right_ring="Shneddick Ring",
+    back={ name="Nantosuelta's Cape", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','Evasion+10','Pet: "Regen"+10','Pet: "Regen"+5',}},
+}

@@ -1,0 +1,18 @@
+sets.exported = {
+    main="Tauret",
+    sub={ name="Shijo", augments={'DEX+15','"Dual Wield"+5','"Triple Atk."+2',}},
+    range="Musketoon",
+    ammo="Bronze Bullet",
+    head="Guide Beret",
+    body="Malignance Tabard",
+    hands="Pill. Armlets +3",
+    legs="Temachtiani Pants",
+    feet="Temachtiani Boots",
+    neck="Null Loop",
+    waist="Null Belt",
+    left_ear="Odr Earring",
+    right_ear="Mache Earring +1",
+    left_ring="Shneddick Ring",
+    right_ring="Jubilee Ring",
+    back="Null Shawl",
+}

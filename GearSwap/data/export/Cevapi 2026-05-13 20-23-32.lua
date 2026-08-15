@@ -1,0 +1,16 @@
+sets.exported = {
+    main={ name="Solstice", augments={'Mag. Acc.+20','Pet: Damage taken -4%','"Fast Cast"+5',}},
+    ammo="Hydrocera",
+    head="Nyame Helm",
+    body="Nyame Mail",
+    hands="Nyame Gauntlets",
+    legs="Nyame Flanchard",
+    feet="Nyame Sollerets",
+    neck={ name="Bagua Charm +2", augments={'Path: A',}},
+    waist="Embla Sash",
+    left_ear="Mendi. Earring",
+    right_ear="Loquac. Earring",
+    left_ring="Stikini Ring +1",
+    right_ring="Warp Ring",
+    back={ name="Nantosuelta's Cape", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','Evasion+10','Pet: "Regen"+10','Pet: "Regen"+5',}},
+}

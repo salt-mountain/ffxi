@@ -1,0 +1,16 @@
+sets.exported = {
+    main="Karambit",
+    range="Animator P II +1",
+    head="Malignance Chapeau",
+    body="Malignance Tabard",
+    hands="Malignance Gloves",
+    legs="Malignance Tights",
+    feet="Malignance Boots",
+    neck="Null Loop",
+    waist="Moonbow Belt +1",
+    left_ear="Mache Earring +1",
+    right_ear="Brutal Earring",
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+    back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10',}},
+}

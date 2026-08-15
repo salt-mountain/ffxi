@@ -1,0 +1,16 @@
+sets.exported = {
+    main="Karambit",
+    ammo="Amar Cluster",
+    head="Nyame Helm",
+    body="Malignance Tabard",
+    hands="Malignance Gloves",
+    legs="Nyame Flanchard",
+    feet="Nyame Sollerets",
+    neck="Null Loop",
+    waist="Null Belt",
+    left_ear="Mache Earring +1",
+    right_ear="Brutal Earring",
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+    back={ name="Mecisto. Mantle", augments={'Cap. Point+30%','HP+25','Rng.Acc.+1','DEF+8',}},
+}

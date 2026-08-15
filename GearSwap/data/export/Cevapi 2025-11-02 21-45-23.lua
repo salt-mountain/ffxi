@@ -1,0 +1,17 @@
+sets.exported = {
+    main="Marin Staff +1",
+    sub="Khonsu",
+    ammo="Staunch Tathlum +1",
+    head="Jhakri Coronal +2",
+    body="Jhakri Robe +2",
+    hands="Jhakri Cuffs +2",
+    legs="Jhakri Slops +2",
+    feet="Jhakri Pigaches +2",
+    neck="Erra Pendant",
+    waist="Witful Belt",
+    left_ear="Mendi. Earring",
+    right_ear="Magnetic Earring",
+    left_ring="Stikini Ring +1",
+    right_ring="Stikini Ring +1",
+    back={ name="Lugh's Cape", augments={'"Fast Cast"+10',}},
+}
