@@ -734,7 +734,10 @@ function init_gear_sets()
     --   • Etiolation Earring (MDT-3%) — Vagary — real MDT upgrade (we're under MDT cap)
     --   • Adamantite Armor (DT-20%) — Limbus — frees up Nyame Mail slot (Coat +2's set bonus + Refresh+3 could go here instead)
     sets.idle.PDT = set_combine(sets.idle, {
-        body  = "Nyame Mail",       -- DT-9% mixed (replaces Shamash Robe's PDT-10% physical-only)
+        -- body: kept as base idle's Shamash Robe (PDT-10% physical-only + Refresh+3/MAB+45) per user
+        -- preference 2026-08-01. NOTE: this gives up Nyame Mail's generic DT-9% (which also covered
+        -- MAGICAL damage) — so the body slot no longer mitigates AoE magic. Swap back to "Nyame Mail"
+        -- if you want mixed-damage coverage in this survival stance.
         legs  = "Nyame Flanchard",  -- DT-8%
         -- hands intentionally NOT overridden: base idle's Azimuth Gloves +2 (DT-11%) wins over Nyame Gauntlets (DT-7%)
     })
