@@ -23,8 +23,9 @@
 --     so automaton commands (Deploy/Retrieve/Maneuvers) work. ammo slot is left free.
 --
 -- Keybinds (set in user_setup, cleared in user_unload):
---   F9   cycle PlayMode       — switches between 'TP' (normal TP/idle sets) and 'Travel'
---                               (sets.Travel: Shneddick Ring move speed +18% + Warp Ring escape).
+--   F9   cycle PlayMode       — three-position: 'TP' (normal TP/idle sets) → 'DT' (sets.DT:
+--                               Alabaster Earring + Murky Ring, DT-15%) → 'Travel' (sets.Travel:
+--                               Shneddick Ring move speed +18% + Warp Ring escape).
 --                               Holds while idle and while engaged.
 --   ^F9  cycle OffenseMode    (Normal / Acc)   — moved off plain F9 to make room for Travel
 --   F10  cycle HybridMode     (Normal / PDT)   — master damage-taken stance
@@ -34,7 +35,7 @@
 --   ^F12 gs c update          (force re-equip)
 --
 -- //gs c commands:
---   gs c cycle PlayMode     — same as F9 (TP <-> Travel)
+--   gs c cycle PlayMode     — same as F9 (TP → DT → Travel)
 --   gs c lockstyle          — re-apply lockstyle set 20 (auto-applied on file load)
 --   gs c update      — re-equip current sets
 -------------------------------------------------------------------------------------------------------------------
@@ -73,12 +74,13 @@ function user_setup()
     -- here so you can build sets.engaged.Pet.Acc / sets.idle.Pet.Acc later without re-plumbing.
     state.PetMode = M('Normal', 'Acc')
 
-    -- PlayMode (F9) — a two-position switch between your TP set and Travel:
+    -- PlayMode (F9) — a three-position switch:
     --   'TP'     → normal TP / idle sets, untouched
+    --   'DT'     → sets.DT over the top (Alabaster Earring + Murky Ring; DT-15% total)
     --   'Travel' → sets.Travel over the top (Shneddick Ring move speed + Warp Ring escape)
-    -- F9 cycles TP → Travel → TP. Applied in customize_idle_set / customize_melee_set below, so
-    -- it holds whether you're standing or engaged.
-    state.PlayMode = M{['description'] = 'Play Mode', 'TP', 'Travel'}
+    -- F9 cycles TP → DT → Travel → TP. Applied in customize_idle_set / customize_melee_set below,
+    -- so it holds whether you're standing or engaged.
+    state.PlayMode = M{['description'] = 'Play Mode', 'TP', 'DT', 'Travel'}
 
     -- Macro setup — adjust book/sheet to your in-game PUP macros.
     set_macro_page(1, 6)    -- Sheet 1, Book 6 (CHANGE to your PUP macro book)
@@ -89,7 +91,7 @@ function user_setup()
     send_command('wait 3; input /lockstyleset 20')
 
     -- Keybinds
-    send_command('bind F9 gs c cycle PlayMode')      -- switch TP set <-> Travel (movement + Warp Ring)
+    send_command('bind F9 gs c cycle PlayMode')      -- cycle TP -> DT -> Travel
     send_command('bind ^F9 gs c cycle OffenseMode')  -- OffenseMode moved here off plain F9
     send_command('bind F10 gs c cycle HybridMode')
     send_command('bind F11 gs c cycle IdleMode')
@@ -318,7 +320,34 @@ function init_gear_sets()
     }
 
     -- =============================================================================
-    -- TRAVEL — the 'Travel' half of PlayMode (F9). Applied over idle AND engaged via
+    -- DT — the 'DT' middle position of PlayMode (F9). Applied over idle AND engaged via
+    -- customize_idle_set / customize_melee_set, exactly like Travel. Sits between 'TP' and
+    -- 'Travel' in the F9 cycle: TP → DT → Travel → TP.
+    --
+    -- This is an ACCESSORY-only overlay — it deliberately does not touch armor, so it stacks on
+    -- top of whatever body set is already resolved (Malignance in Normal, or the full Nyame shell
+    -- if you're also in HybridMode/IdleMode PDT). That makes it additive with F10/F11 rather than
+    -- competing with them.
+    --
+    -- Trade (all stats BGWiki-verified 2026-08-17):
+    --   GAIN: DT-15%, Haste+5%, HP+100, MP+30, DEF+20, spell interruption rate down 3%
+    --   LOSE: Double Attack+5%, Store TP+7, Accuracy+10, Subtle Blow+10, Regen+2
+    -- The Haste+5% on Alabaster partly pays back the Store TP loss, so the DPS cost is smaller
+    -- than the raw stat list suggests.
+    -- =============================================================================
+    sets.DT = {
+        right_ear = "Alabaster Earring", -- has (findAll 26119) — DEF:10, HP+100, Haste+5%, Damage taken -5%,
+                                         --   Pet: Acc/RAcc/MAcc+15. Replaces Brutal Earring (Double Attack+5%, Store TP+1).
+        left_ring = "Murky Ring",        -- has (findAll 26234) — DEF:10, MP+30, spell interruption rate down 3%,
+                                         --   Damage taken -10%, Pet: Acc/RAcc/MAcc+15. Replaces ONE Chirich Ring +1
+                                         --   (Accuracy+10, Store TP+6, Subtle Blow+10, Regen+2); right_ring keeps its Chirich.
+                                         --   LEFT ring on purpose: sets.Kiting (^F11) overlays RIGHT ring with Shneddick,
+                                         --   so putting Murky on the left lets DT mode and Kiting coexist — Kiting drops the
+                                         --   remaining Chirich instead of your DT ring.
+    }
+
+    -- =============================================================================
+    -- TRAVEL — the 'Travel' end of PlayMode (F9). Applied over idle AND engaged via
     -- customize_idle_set / customize_melee_set. Drops both Chirich Ring +1 for the run.
     -- This is a superset of sets.Kiting (which is movement only); Kiting on ^F11 still works,
     -- and if both are active, Travel wins because customize_* runs after Mote's apply_kiting.
@@ -360,7 +389,9 @@ end
 -- Travel Mode overlay (F9). Mote calls these at the end of get_idle_set / get_melee_set, so the
 -- rings go on over whatever idle/TP set was resolved, and come straight back off when toggled.
 function customize_idle_set(idleSet)
-    if state.PlayMode.value == 'Travel' then
+    if state.PlayMode.value == 'DT' then
+        idleSet = set_combine(idleSet, sets.DT)
+    elseif state.PlayMode.value == 'Travel' then
         idleSet = set_combine(idleSet, sets.Travel)
     end
     return idleSet
@@ -368,7 +399,9 @@ end
 
 
 function customize_melee_set(meleeSet)
-    if state.PlayMode.value == 'Travel' then
+    if state.PlayMode.value == 'DT' then
+        meleeSet = set_combine(meleeSet, sets.DT)
+    elseif state.PlayMode.value == 'Travel' then
         meleeSet = set_combine(meleeSet, sets.Travel)
     end
     return meleeSet

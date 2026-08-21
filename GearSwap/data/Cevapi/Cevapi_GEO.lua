@@ -689,7 +689,14 @@ function init_gear_sets()
         legs  = "Bagua Pants +2",           -- has — Indicolure dur+18, MAB+44, Haste+5%
         feet  = "Azimuth Gaiters +3",       -- has (acquired 2026-05-30) — DT-11% for player survival (up from DT-10% on +2). Sandals +3 still equips in `sets.idle.Pet` for pet survival when luopan is out.
         neck  = "Bagua Charm +2",           -- has (Path A: MP+50, Luopan Dur+25%, Luopan Absorbs DT+10%). TODO upgrade: Loricate Torque +1 for DT-6%.
-        waist = "Embla Sash",               -- has — Sublimation+3, FC+5%, Enh.Mag dur+10%. TODO: Carrier's Sash for resist utility.
+        waist = "Null Belt",                -- has (findAll id 26367) — Evasion+30, Magic Evasion+30, "Magic Def. Bonus"+3, "Regen"+3,
+                                            --   Acc/RAcc/MAcc+30 (BGWiki verified 2026-08-17).
+                                            --   Swapped in from Embla Sash 2026-08-17. Embla's three stats (FC+5%, Enh.Mag dur+10%,
+                                            --   Sublimation+3) are ALL precast/midcast-only — and Sublimation is a SCH ability, so it's
+                                            --   dead weight unless /SCH. Embla therefore contributed literally nothing at idle.
+                                            --   CAVEAT: Null Belt has no DEF and no DT% — its mitigation is evasion / magic evasion /
+                                            --   MDB plus Regen sustain, so it does NOT feed the DT accounting in sets.idle.PDT below.
+                                            --   Embla Sash is retained where it actually works: sets.precast.FC and Enhancing Magic midcast.
         left_ear  = "Odnowa Earring",       -- has — HP+100 (from MP convert), VIT+2, STR+2, MDT-1%. Idle-DT pick over Loquac. (FC doesn't apply at idle).
         right_ear = "Alabaster Earring",    -- has — DEF+10, HP+100, Haste+5%, DT-5%, Pet:Acc/RAcc/MAcc+15. Biggest single DT earring you own.
         left_ring  = "Stikini Ring +1",     -- has — MND+8, MAcc+11, All Magic Skills+8, Refresh+1

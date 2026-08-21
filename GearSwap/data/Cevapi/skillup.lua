@@ -30,6 +30,7 @@ sets.Idle = {
     range="Dunna",
     --legs="Temachtiani Pants",
     --feet="Temachtiani Boots",
+    right_ring = "Jubilee ring",
     }
 sets.Resting = {
     main="Dark Staff",
@@ -41,6 +42,10 @@ sets.Resting = {
 --DO NOT CHANGE ANY THING BELOW THIS LINE--
 function get_sets()
     skilluprun = false
+    last_action_time = nil       -- watchdog: when we last sent a cast
+    rest_request_time = nil      -- watchdog: when we last asked to rest
+    rest_retry_count = 0         -- watchdog: consecutive failed rest attempts
+    last_foreign_heal_log = nil  -- throttle for the 0x0DF diagnostic
     gs_skill = {skillup_table = {"Healing","Geomancy","Enhancing","Ninjutsu","Singing","Blue","Summoning"},skillup_type = 'None',skillup_spells = T{},
         skillup_count=1,bluspellulid = {['Harden Shell']=737,['Pyric Bulwark']=741,['Carcharian Verve']=745},skill_up_item = T{5889,5890,5891,5892}}
     end_skillup = {shutdown = false,logoff = false,stoptype = "Stop"}
@@ -68,6 +73,33 @@ end
 function skillup_log(msg)
     windower.add_to_chat(207, '[skillup] '..msg)
 end
+-- Guard against the spell list being emptied (filtered_action / nin_tool_open both delete from it).
+-- With a 2-spell list, two deletions leave #list == 0 and `count % 0` yields nan -> nil index -> error.
+function advance_spell()
+    if #gs_skill.skillup_spells == 0 then
+        skilluprun = false
+        skillup_log('spell list is empty - stopping')
+        initialize(window, gs_skillup.box, 'window')
+        updatedisplay()
+        return false
+    end
+    gs_skill.skillup_count = (gs_skill.skillup_count % #gs_skill.skillup_spells) + 1
+    return true
+end
+-- Single entry point for resting. Resting is impossible while Engaged, and a /heal sent in the
+-- same frame as a cancelled action gets swallowed - so drop combat first and always delay.
+function start_resting(reason)
+    rest_request_time = os.clock()
+    if reason then
+        skillup_log('rest requested: '..reason)
+    end
+    if player.status == 'Engaged' then
+        skillup_log('engaged - sending /attack off before /heal on')
+        send_command('input /attack off;wait 2.0;input /heal on')
+    else
+        send_command('wait 1.0;input /heal on')
+    end
+end
 function status_change(new,old)
     if sets[new] then
         equip(sets[new])
@@ -85,6 +117,8 @@ function status_change(new,old)
         end
     elseif new=='Resting' then
         rest_start_time = os.clock()
+        rest_request_time = nil  -- rest actually started; clear the stall watchdog
+        rest_retry_count = 0
         if skilluprun then
             local p = windower.ffxi.get_player()
             local live_mp = (p and p.vitals) and (p.vitals.mp..'/'..p.vitals.max_mp) or '?'
@@ -107,7 +141,7 @@ function filtered_action(spell)
             send_command('input /ja "'..res.job_abilities[338][gearswap.language]..'" <me>')
         else
             cancel_spell()
-            gs_skill.skillup_count = (gs_skill.skillup_count % #gs_skill.skillup_spells) + 1
+            if not advance_spell() then return end
             send_command('input /ma "'..gs_skill.skillup_spells[gs_skill.skillup_count]..'" <me>')
         end
         return
@@ -127,16 +161,17 @@ function filtered_action(spell)
             gs_skill.skillup_spells:delete(spell.name)
         end
         cancel_spell()
-        gs_skill.skillup_count = (gs_skill.skillup_count % #gs_skill.skillup_spells) + 1
+        if not advance_spell() then return end
         send_command('input /ma "'..gs_skill.skillup_spells[gs_skill.skillup_count]..'" <me>')
     end
 end
 function precast(spell)
+    last_action_time = os.clock()
     if pet.isvalid and S{"Release","Full Circle"}:contains(spell.en) then
         if spell.en == "Release" then
             if not pet.isvalid then
                 cancel_spell()
-                send_command('input /heal on')
+                start_resting('Release with no pet')
             end
             local recast = windower.ffxi.get_ability_recasts()[spell.recast_id]
             if (recast > 0) then
@@ -149,7 +184,7 @@ function precast(spell)
         end
     elseif not pet.isvalid and S{"Release","Avatar's Favor","Elemental Siphon"}:contains(spell.en) then
         cancel_spell()
-        send_command('input /heal on')
+        start_resting('pet-dependent action with no pet')
         return
     end
     if check_skill_cap() or not skilluprun then cancel_spell() shutdown_logoff() return end
@@ -174,19 +209,26 @@ function precast(spell)
             return
         end
     end
-    if spell and (spell.mp_cost + 25) > player.mp  then
-        if gs_skillup.skipped_spells:contains(spell.name) then
-            gs_skillup.skipped_spells:clear()
+    -- Prefer live MP over gearswap's cached player.mp, which plateaus and goes stale.
+    if spell and spell.mp_cost then
+        local p = windower.ffxi.get_player()
+        local live_mp = (p and p.vitals) and p.vitals.mp or nil
+        local mp_now = live_mp or player.mp
+        if (spell.mp_cost + 25) > mp_now then
+            if gs_skillup.skipped_spells:contains(spell.name) then
+                gs_skillup.skipped_spells:clear()
+                cancel_spell()
+                skillup_log(string.format('insufficient MP for %s (need %d, live %s, cached %d)',
+                    spell.name, spell.mp_cost + 25, tostring(live_mp), player.mp or -1))
+                start_resting('out of MP')
+                return
+            end
             cancel_spell()
-            skillup_log(string.format('insufficient MP for %s (need %d, have %d) — sending /heal on', spell.name, spell.mp_cost + 25, player.mp))
-            send_command('input /heal on')
+            gs_skillup.skipped_spells:append(spell.name)
+            if not advance_spell() then return end
+            send_command('input /ma "'..gs_skill.skillup_spells[gs_skill.skillup_count]..'" <me>')
             return
         end
-        cancel_spell()
-        gs_skillup.skipped_spells:append(spell.name)
-        gs_skill.skillup_count = (gs_skill.skillup_count % #gs_skill.skillup_spells) + 1
-        send_command('input /ma "'..gs_skill.skillup_spells[gs_skill.skillup_count]..'" <me>')
-        return
     end
     if gs_skillup.use_trust and party.count == 1 and spell_usable(res.spells[931]) then
         if spell.en ~= "Moogle" then
@@ -222,14 +264,15 @@ function precast(spell)
     if spell.name == gs_skill.skillup_spells[gs_skill.skillup_count] then
         if not spell_usable(spell) then
             cancel_spell()
-            gs_skill.skillup_count = (gs_skill.skillup_count % #gs_skill.skillup_spells) + 1
+            if not advance_spell() then return end
             send_command('input /ma "'..gs_skill.skillup_spells[gs_skill.skillup_count]..'" <me>')
         else
-            gs_skill.skillup_count = (gs_skill.skillup_count % #gs_skill.skillup_spells) + 1
+            advance_spell()
         end
     end
 end
 function aftercast(spell)
+    last_action_time = os.clock()
     if pet.isvalid and check_skill_cap() then
         if pet.name == "Luopan" then
             send_command('wait 1.0;input /ja "'..res.job_abilities[345][gearswap.language]..'" <me>')
@@ -539,9 +582,24 @@ windower.raw_register_event('incoming chunk', function(id, data, modified, injec
         gs_skillup.skill = packet
         updatedisplay()
     end
-    if id == 0x0DF and skilluprun then
-        if data:unpack('I', 0x0D) >= player.max_mp and skilluprun then
-            windower.send_command('input /heal off')
+    -- 0x0DF (Char Update) is broadcast for EVERY party member and trust, not just you.
+    -- Without the ID guard below, any party member whose MP happened to be >= your max_mp
+    -- fired an immediate /heal off, killing the rest before the client ever entered Resting.
+    if id == 0x0DF and skilluprun and player.id and player.max_mp and player.max_mp > 0 then
+        local pkt_id = data:unpack('I', 0x05)  -- offset 0x04, 1-based index
+        local pkt_mp = data:unpack('I', 0x0D)  -- offset 0x0C, 1-based index
+        if pkt_id == player.id then
+            if pkt_mp >= player.max_mp then
+                windower.send_command('input /heal off')
+            end
+        elseif pkt_mp >= player.max_mp then
+            -- Diagnostic: this is the packet that used to cancel resting. Throttled to 1 per 10s.
+            local t = os.clock()
+            if not last_foreign_heal_log or (t - last_foreign_heal_log) > 10 then
+                last_foreign_heal_log = t
+                skillup_log(string.format('ignored 0x0DF from id=%d (MP %d >= your max %d) - this used to cancel resting',
+                    pkt_id, pkt_mp, player.max_mp))
+            end
         end
     end
 end)
@@ -624,6 +682,35 @@ windower.raw_register_event('prerender',function()
             skillup_log(stuck and 'WATCHDOG fired — forcing /heal off after 2.5min' or 'MP full — sending /heal off')
             windower.send_command('input /heal off')
             rest_start_time = nil
+        end
+    end
+    -- Stall watchdog. The old code could send /heal on, have it silently fail, and then sit idle
+    -- forever: nothing re-queued a cast, and the Resting watchdog above cannot fire when we never
+    -- entered Resting in the first place. This covers both "rest never started" and "gone quiet".
+    if frame_count%300 == 0 and skilluprun and player.status ~= 'Resting' then
+        local t = os.clock()
+        if rest_request_time and (t - rest_request_time) > 15 then
+            rest_retry_count = (rest_retry_count or 0) + 1
+            rest_request_time = nil
+            if rest_retry_count <= 3 then
+                skillup_log(string.format('rest never started after 15s (status=%s) - retry %d/3',
+                    tostring(player.status), rest_retry_count))
+                start_resting(nil)
+            else
+                skillup_log('rest failed 3x - giving up on resting, resuming casts')
+                rest_retry_count = 0
+                last_action_time = t
+                if gs_skill.skillup_spells[gs_skill.skillup_count] then
+                    send_command('input /ma "'..gs_skill.skillup_spells[gs_skill.skillup_count]..'" <me>')
+                end
+            end
+        elseif not rest_request_time and last_action_time and (t - last_action_time) > 30 then
+            skillup_log(string.format('no action for %.0fs (status=%s) - resuming casts',
+                t - last_action_time, tostring(player.status)))
+            last_action_time = t
+            if gs_skill.skillup_spells[gs_skill.skillup_count] then
+                send_command('input /ma "'..gs_skill.skillup_spells[gs_skill.skillup_count]..'" <me>')
+            end
         end
     end
     frame_count = frame_count + 1
