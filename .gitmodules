@@ -1,3 +1,6 @@
 [submodule "superwarp"]
 	path = superwarp
 	url = https://github.com/AkadenTK/superwarp
+[submodule "revisible"]
+	path = revisible
+	url = https://github.com/AkadenTK/revisible.git
