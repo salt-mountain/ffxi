@@ -7,3 +7,6 @@
 [submodule "trust"]
 	path = trust
 	url = https://github.com/cyritegamestudios/trust.git
+[submodule "xivparty"]
+	path = xivparty
+	url = https://github.com/Tylas11/XivParty.git
