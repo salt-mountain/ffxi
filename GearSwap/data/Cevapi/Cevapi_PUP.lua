@@ -227,7 +227,7 @@ function init_gear_sets()
     -- (`sets.idle = sets.engaged` would make them ONE table — the later sets.idle.PDT assignment
     -- would then silently overwrite sets.engaged.PDT. set_combine copies, so they stay separate.)
     local TP_gear = {
-        main  = "Karambit",          -- has — starter H2H. TODO: real H2H (Kenkonken / Verethragna / Godhands)
+        --main  = "Karambit",          -- has — starter H2H. TODO: real H2H (Kenkonken / Verethragna / Godhands)
         range = "Animator P II +1",  -- pet command device (keep equipped so automaton commands work)
         -- ammo: with the Animator in range, only PUP ammo (Automaton Oil / Repair Kit) is allowed here
         head  = "Malignance Chapeau", -- has (acquired 2026-06-26) — Haste+6, STP+8, Acc+50, DEX+40, PDL+3%, DT-6%
