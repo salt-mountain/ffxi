@@ -418,7 +418,7 @@ function init_gear_sets()
     sets.precast.JA["Full Circle"]        = { head  = "Azimuth Hood +3",
                                               hands = "Bagua Mitaines +2"  }  -- +MP recovered (Hood +3 has Full Circle+4, up from +3 on +2)
     sets.precast.JA["Radial Arcana"]      = { feet  = "Bagua Sandals +3"   }  -- has — Augment: Enhances Radial Arcana effect = +5% MP restored per merit level (so +25% MP at 5/5 merits, party-wide AoE)
-    sets.precast.JA["Mending Halation"]   = { legs  = "Bagua Pants +2"     }  -- +AoE Cure amount
+    sets.precast.JA["Mending Halation"]   = { legs  = "Bagua Pants +3"     }  -- +AoE Cure amount
     sets.precast.JA["Ecliptic Attrition"] = { hands = "Geomancy Mitaines +3"   }  -- has — +next aura tick potency (AF+3 retains the Ecliptic Attrition augment from base AF, now stronger)
     sets.precast.JA["Lasting Emanation"]  = { body  = "Geomancy Tunic +3"  }  -- has — no GEO piece carries a Lasting Emanation JA augment; this is just the body you own (the +2 was consumed in the RP upgrade to +3). Stats: Life Cycle+14 / Refresh+3 / Dark skill+21 / MAcc+50.
     sets.precast.JA["Theurgic Focus"]     = { head  = "Azimuth Hood +3"    }  -- +next-spell MAB
@@ -469,7 +469,7 @@ function init_gear_sets()
         head  = "Vanya Hood",           -- has Path D — base Cure potency +10%, +10% FC + Haste 2%
         body  = "Vanya Robe",           -- has Path C — MND+10, SIRD-15%, no cure benefit; placeholder
         hands = "Vanya Cuffs",          -- has Path B — Healing Skill +20, Cure cast time -7%, MDT-3%
-        legs  = "Bagua Pants +2",       -- has — HP+108 (vs Vanya Slops HP+43). Vanya Slops are unaugmented and give 0 cure benefit; Bagua Pants are also 0 cure benefit but preserve 65 HP during midcast. If Vanya Slops Path A is augmented later (+Cure potency 7%), swap back.
+        legs  = "Bagua Pants +3",       -- has — HP+108 (vs Vanya Slops HP+43). Vanya Slops are unaugmented and give 0 cure benefit; Bagua Pants are also 0 cure benefit but preserve 65 HP during midcast. If Vanya Slops Path A is augmented later (+Cure potency 7%), swap back.
         feet  = "Vanya Clogs",          -- has Path D — +10% FC, no specific cure benefit but stays in slot
         neck  = "Bagua Charm +2",       -- has — MAcc+30, Geomancy+7; placeholder until a Cure-pot neck is acquired
         waist = "Embla Sash",           -- placeholder; auto-overridden to Hachirin-no-Obi on Lightsday (TODO: verify Hachirin)
@@ -541,7 +541,7 @@ function init_gear_sets()
         head  = "Bagua Galero +2",          -- has — Indi magic acc + Geomancy skill
         body  = "Azimuth Coat +2",          -- has — MAcc+54, MAB+54, Elemental skill+23, Refresh+3, MBD II+4, Haste+3%, Enmity-9
         hands = "Azimuth Gloves +1",        -- has
-        legs  = "Azimuth Tights +2",        -- has — MAcc+53, MAB+53, INT+50, MND+33, MDmg+23, Dark skill+25, Haste+5%, MBD+10 (strict upgrade over Bagua Pants +2's MAcc+29)
+        legs  = "Azimuth Tights +2",        -- has — MAcc+53, MAB+53, INT+50, MND+33, MDmg+23, Dark skill+25, Haste+5%, MBD+10 (strict upgrade over Bagua Pants +3's MAcc+29)
         feet  = "Bagua Sandals +3",         -- has — Enfeebling skill+21 (vs +19 on +2), MAcc+36, MAB+48; lands /RDM sub enfeebles cleaner
         neck  = "Bagua Charm +2",           -- has
         waist = "Acuity Belt +1",           -- TODO: Sortie; +MAcc
@@ -635,7 +635,7 @@ function init_gear_sets()
         head  = "Azimuth Hood +3",          -- has (acquired 2026-05-30) — Geomancy skill +25 (was +20 on +2), DT-12%, Full Circle+4, Luopan Regen+5, Haste+6%, MAcc+61, MAB+51
         body  = "Bagua Tunic +2",           -- has — Geomancy skill+14 + MAB+56, MAcc+30, Haste+3%. KEPT over Geomancy Tunic +3 here: the AF +3 body has NO Geomancy skill and NO MAB (it's Dark skill+21 / Refresh+3 / Life Cycle+14 / MAcc+50), so Bagua Tunic +2 wins for Indi/Geo aura potency. (BGWiki-verified 2026-05-29.)
         hands = "Geomancy Mitaines +3",     -- has — Geomancy skill+19 (was +15 on +1), MAcc+48, PDT-3%, Luopan DT-13%, Haste+3%, Ecliptic Attrition augment
-        legs  = "Bagua Pants +2",           -- has
+        legs  = "Bagua Pants +3",           -- has
         feet  = "Azimuth Gaiters +3",       -- has (acquired 2026-05-30) — Indicolure spell duration +30 (was +25 on +2), DT-11%, MAcc+60, MAB+50, MDmg+30, Haste+3% (BGWiki-verified)
         neck  = "Bagua Charm +2",           -- has
         waist = "Embla Sash",
@@ -686,7 +686,7 @@ function init_gear_sets()
         head  = "Azimuth Hood +3",          -- has (acquired 2026-05-30) — Geomancy skill+25, Full Circle+4, DT-12%, Luopan Regen+5, Haste+6%. Azimuth set bonus still active (2+ Empyrean pieces: Coat +2 + Hood +3)
         body  = "Shamash Robe",             -- has — Refresh+3, PDT-10%, MAB+45, Resist Silence+90
         hands = "Azimuth Gloves +2",        -- has — DT-11%, Enfeebling skill+23, Haste+3%, MAB+47, MAcc+52, Enmity-12 (replaces Bagua Mitaines +2 for support-survival framing; loses Refresh+1, gains DT-11%)
-        legs  = "Bagua Pants +2",           -- has — Indicolure dur+18, MAB+44, Haste+5%
+        legs  = "Bagua Pants +3",           -- has — Indicolure dur+18, MAB+44, Haste+5%
         feet  = "Azimuth Gaiters +3",       -- has (acquired 2026-05-30) — DT-11% for player survival (up from DT-10% on +2). Sandals +3 still equips in `sets.idle.Pet` for pet survival when luopan is out.
         neck  = "Bagua Charm +2",           -- has (Path A: MP+50, Luopan Dur+25%, Luopan Absorbs DT+10%). TODO upgrade: Loricate Torque +1 for DT-6%.
         waist = "Null Belt",                -- has (findAll id 26367) — Evasion+30, Magic Evasion+30, "Magic Def. Bonus"+3, "Regen"+3,
@@ -697,7 +697,13 @@ function init_gear_sets()
                                             --   CAVEAT: Null Belt has no DEF and no DT% — its mitigation is evasion / magic evasion /
                                             --   MDB plus Regen sustain, so it does NOT feed the DT accounting in sets.idle.PDT below.
                                             --   Embla Sash is retained where it actually works: sets.precast.FC and Enhancing Magic midcast.
-        left_ear  = "Odnowa Earring",       -- has — HP+100 (from MP convert), VIT+2, STR+2, MDT-1%. Idle-DT pick over Loquac. (FC doesn't apply at idle).
+        left_ear  = "Odnowa Earring +1",    -- has (findAll 27549) — STR+3, VIT+3, converts 110 MP to HP, MDT-2%,
+                                            --   Unity Ranking Acc+5~10 (BGWiki verified 2026-09-09). Upgraded from the base
+                                            --   Odnowa Earring, which findAll shows you no longer own — so this slot was silently
+                                            --   failing to equip until now. Augmentable to R15 (DEF+30, DT-3%); your 2026-09-09 gs
+                                            --   export lists NO augments on it, so the plain name is used. A name-only entry matches
+                                            --   the item in any augment state; a wrong augments table would make GearSwap skip it.
+                                            --   Idle-DT pick over Loquac. (FC doesn't apply at idle).
         right_ear = "Alabaster Earring",    -- has — DEF+10, HP+100, Haste+5%, DT-5%, Pet:Acc/RAcc/MAcc+15. Biggest single DT earring you own.
         left_ring  = "Stikini Ring +1",     -- has — MND+8, MAcc+11, All Magic Skills+8, Refresh+1
         right_ring = "Stikini Ring +1",     -- has (2nd confirmed owned) — MND+8, MAcc+11, All Magic Skills+8, Refresh+1. KEY UPGRADE: Defending Ring (DT-10%) when acquired.
@@ -713,7 +719,7 @@ function init_gear_sets()
     --   head: Hood +2 (DT-11%) > Nyame Helm (DT-7%)            → KEEP base idle's Hood +2
     --   body: Shamash Robe (PDT-10%, physical only) < Nyame Mail (DT-9% mixed) → OVERRIDE to Nyame Mail
     --   hands: Gloves +2 (DT-11%) > Nyame Gauntlets (DT-7%)    → KEEP base idle's Gloves +2
-    --   legs: Bagua Pants +2 (0% DT) < Nyame Flanchard (DT-8%) → OVERRIDE to Nyame Flanchard
+    --   legs: Bagua Pants +3 (0% DT) < Nyame Flanchard (DT-8%) → OVERRIDE to Nyame Flanchard
     --   feet: Gaiters +2 (DT-10%) > Nyame Sollerets (DT-7%)    → KEEP base idle's Gaiters +2
     --
     -- Full DT accounting across ALL inherited slots:
@@ -723,11 +729,11 @@ function init_gear_sets()
     --             gives slack to swap a current generic DT piece for utility (e.g., Alabaster → Magnetic
     --             Earring for SIRD-8%, or drop a Nyame slot for an Empyrean Refresh body).
     --   PDT-only:   Genbu's Shield -10% (stacks ON TOP of the generic cap for physical damage)
-    --   MDT-only:   Odnowa Earring -1% (negligible; main MDT upgrade target is Etiolation Earring -3% MDT)
+    --   MDT-only:   Odnowa Earring +1 -2% (main MDT upgrade target is Etiolation Earring -3% MDT)
     --
     -- Effective damage reduction in this set:
     --   Physical: -50% generic + -10% PDT = ~-60% combined
-    --   Magical:  -50% generic + -1% MDT  = ~-51% combined
+    --   Magical:  -50% generic + -2% MDT  = ~-52% combined
     --
     -- Empyrean set bonus: Hood +2 + Gloves +2 + Gaiters +2 = 3 pieces in PDT idle
     -- → "Occ. casts geomancy spells without using MP" at +3% chance (was +2% before Gloves +2).
@@ -805,7 +811,7 @@ function init_gear_sets()
     -- the +1 upgrade bumps defensive stats but NOT movement speed). Movement bump comes at +3
     -- (+18% from the boots alone). Until then, Shneddick Ring (+18%) fills the gap.
     sets.Kiting       = {
-        feet       = "Geo. Sandals +1",   -- has — Movement speed +12% + Haste+3%, GEO-only.
+        feet       = "Geo. Sandals +2",   -- has — Movement speed +12% + Haste+3%, GEO-only.
                                           -- +1 vs base: same move speed, but better defensive stats.
                                           -- KEY UPGRADE: Geomancy Sandals +3 (Movement speed +18%, RP path).
                                           -- After +3: drop Shneddick from this set, it's redundant.
