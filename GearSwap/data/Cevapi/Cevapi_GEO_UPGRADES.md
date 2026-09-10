@@ -369,7 +369,7 @@ These are the upgrades that change *the most slots in the most sets* per unit of
 | ammo | Pemphredo Tathlum | keep |
 | head | Bagua Galero +2 | Bagua Galero +3 (MAcc+46 vs +36) |
 | body | Azimuth Coat +1 | Azimuth Coat +3 (MAcc+64) |
-| hands | Azimuth Gloves +1 | Azimuth Gloves +3 (MAcc+62, Enfeebling skill+28) |
+| hands | **Azimuth Gloves +3** (MAcc+62, Enfeebling skill+28, MAB+52, DT-12%) | done — upgraded 2026-09-09 |
 | legs | Azimuth Tights +2 (MAcc+53, Dark skill+25) | Azimuth Tights +3 (MAcc+63) |
 | feet | Bagua Sandals +2 | **Bagua Sandals +3** (Enfeebling skill +21, MAcc+36) |
 | neck | Bagua Charm +2 | keep / Incanter's Torque alternative (all magic skills+10) |
@@ -473,7 +473,8 @@ These augments don't exist anywhere else in the game — no Empyrean +3, no Refo
 
 ### Reforged Empyrean +3 (Ruspix, Leafallia)
 Azimuth +3 upgrades. 70,000 Gallimaufry + 1 Ra'Kaz. Starstone per piece, traded with the +2 piece.
-- **Priority order**: Azimuth Hood +3 (Geomancy+25, Full Circle+4) → Azimuth Coat +3 (Refresh+4, MBD II+5) → Azimuth Tights +3 (MBD+15) → Azimuth Gaiters +3 (Indi dur+30) → Azimuth Gloves +3
+- **Priority order**: ~~Azimuth Hood +3~~ (done 2026-05-30) → Azimuth Coat +3 (Refresh+4, MBD II+5) → Azimuth Tights +3 (MBD+15) → ~~Azimuth Gaiters +3~~ (done 2026-05-30) → ~~Azimuth Gloves +3~~ (done 2026-09-09)
+- **Remaining**: Azimuth Coat +3, Azimuth Tights +3
 
 ### Sortie BCNM (Reisenjima Henge Omen / Sheol)
 - **Ammurapi Shield** (Kei, Reisenjima Henge)
