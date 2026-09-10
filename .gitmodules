@@ -4,3 +4,6 @@
 [submodule "revisible"]
 	path = revisible
 	url = https://github.com/AkadenTK/revisible.git
+[submodule "trust"]
+	path = trust
+	url = https://github.com/cyritegamestudios/trust.git
