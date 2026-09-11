@@ -34,3 +34,6 @@ luac.out
 
 # GearSwap /gs export dumps — local inventory snapshots, regenerated on demand
 # GearSwap/data/export/
+
+# Ignore addons we're grabbing from others that use a monorepo and bad structure
+FFXI/
