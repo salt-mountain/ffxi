@@ -10,3 +10,4 @@
 [submodule "xivparty"]
 	path = xivparty
 	url = https://github.com/Tylas11/XivParty.git
+	ignore = untracked
