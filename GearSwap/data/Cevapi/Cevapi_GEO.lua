@@ -391,7 +391,9 @@ function init_gear_sets()
         right_ear = "Malignance Earring", -- has — FC+4%, INT+8, MND+8, MAcc+10, MAB+8 (replaces Etiolation TODO; Malignance is +3% FC over Etiolation)
         left_ring  = "Kishar Ring",     -- TODO: Reisenjima Henge Omen (Glassy Gorger); +4% FC
         right_ring = "Lebeche Ring",    -- TODO: stats not yet BGWiki-verified
-        back  = Nantosuelta_Solo,            -- 0 FC contribution; placeholder
+        back  = "Lifestream Cape",      -- has (findAll 28637, qty 1) — Enhances "Fast Cast" +7%
+                                        --   (BGWiki-verified 2026-09-12). Replaces Nantosuelta_Solo, which
+                                        --   contributed 0% FC in this set.
     }
 
     -- Cure precast — Vanya Cuffs Path B's "Cure cast time -7%" is already in base FC.hands.
@@ -649,9 +651,21 @@ function init_gear_sets()
     -- Indi-* overlay: same base but lean into duration where possible.
     -- Will be selected when spellMap == 'Indi' (set in job_get_spell_map).
     sets.midcast.Geomancy.Indi = set_combine(sets.midcast.Geomancy, {
-        -- Bagua Sandals +1/+2 has Indi duration; if your Sandals +2 has the Indi aug, keep them.
-        -- TODO: once you have a Lifestream Cape (Reisenjima craft), put it here:
-        --   back = { name="Lifestream Cape", augments={...} }
+        back = "Lifestream Cape",   -- has (findAll 28637, qty 1). Base, BGWiki-verified 2026-09-12:
+                                    --   DEF:13, HP+50, MP+50, Enfeebling skill+10, Geomancy skill+5,
+                                    --   Enhances "Fast Cast" +7%.
+                                    -- Augments rolled 2026-09-12 (user-reported; not on BGWiki):
+                                    --   Geomancy skill+10 | Indi. eff. dur.+16% | Damage taken-2%
+                                    -- Replaces Nantosuelta_Solo for Indi- casts: duration is the whole
+                                    --   point of this overlay. The +16% is a PERCENTAGE and stacks with the
+                                    --   FLAT Indicolure duration already in the base set (Azimuth Gaiters +3
+                                    --   +30, Bagua Pants +3 +21).
+                                    -- Geomancy skill (+5 base +10 aug = +15) is OVERFLOW: Handbell+Geomancy
+                                    --   is already capped >900, so it adds nothing. Duration and DT-2% are
+                                    --   the real value here.
+                                    -- Name-only on purpose: you own exactly one, and a name-only entry matches
+                                    --   any augment state, whereas a mistyped augments table would make
+                                    --   GearSwap silently skip the piece.
     })
 
     -- Geo-* overlay: luopan stats are LOCKED at "time of placement" (BGWiki Luopan page).
