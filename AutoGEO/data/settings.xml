@@ -84,4 +84,19 @@
             </pos>
         </text>
     </cevapi>
+    <chitani>
+        <indi>Indi-Fury</indi>
+        <recast>
+            <indi>
+                <max>10</max>
+                <min>1</min>
+            </indi>
+        </recast>
+        <text>
+            <pos>
+                <x>2809</x>
+                <y>338</y>
+            </pos>
+        </text>
+    </chitani>
 </settings>

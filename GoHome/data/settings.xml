@@ -17,4 +17,10 @@
             <2>Someone</2>
         </allowed_senders>
     </cevapi>
+    <chitani>
+        <allowed_senders>
+            <1>Aurievaryn</1>
+            <2>Someone</2>
+        </allowed_senders>
+    </chitani>
 </settings>

@@ -9,4 +9,7 @@
     <cevapi>
         <whitelist>Aurievaryn,Javelinx</whitelist>
     </cevapi>
+    <chitani>
+        <whitelist>Aurievaryn,Javelinx</whitelist>
+    </chitani>
 </settings>
