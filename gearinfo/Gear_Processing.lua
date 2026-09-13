@@ -170,26 +170,22 @@ function desypher_description(discription_string, item_t)
 	discription_string = string.gsub(discription_string,  "Great Katana skill",  "Great katana skill")
 	discription_string = string.gsub(discription_string,  "Great Sword skill",  "Great sword skill")
 	
-	local str_table = ''
-	
-	if discription_string:contains('Pet:') then
-		str_table = discription_string:psplit("Pet:")
-		discription_string = str_table[1]
-	elseif discription_string:contains('Wyvern:') then
-		str_table = discription_string:psplit("Wyvern:")
-		discription_string = str_table[1]
-	elseif discription_string:contains('Avatar:') then
-		str_table = discription_string:psplit("Avatar:")
-		discription_string = str_table[1]
-	elseif discription_string:contains('Luopan:') then
-		str_table = discription_string:psplit("Luopan:")
-		discription_string = str_table[1]
-	elseif discription_string:contains('Latent effect:') then
-		str_table = discription_string:psplit("Latent effect:")
-		discription_string = str_table[1]
-	elseif discription_string:contains('Unity Ranking:') then
-		str_table = discription_string:psplit("Unity Ranking:")
-		discription_string = str_table[1]
+	-- Truncate the description at the first marker that introduces stats which are not the
+	-- player's own (pet/avatar stats, conditional latents, unity-rank bonuses).
+	-- This was an elseif chain, so only the first marker in CODE order could split the string:
+	-- a description with two markers kept everything after the second one, and any player stat
+	-- listed after the matched marker was dropped. Now we cut at the EARLIEST marker by
+	-- position, which is correct regardless of the order they appear in.
+	local cut_markers = {'Pet:','Wyvern:','Avatar:','Luopan:','Latent effect:','Unity Ranking:'}
+	local cut_at = nil
+	for _, marker in ipairs(cut_markers) do
+		local pos = discription_string:find(marker, 1, true)
+		if pos and (not cut_at or pos < cut_at) then
+			cut_at = pos
+		end
+	end
+	if cut_at then
+		discription_string = discription_string:sub(1, cut_at - 1)
 	end
 
 	local valid_strings = L{'Delay','DEF','HP','MP','STR','DEX','VIT','AGI','INT','MND','CHR',

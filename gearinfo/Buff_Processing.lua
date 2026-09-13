@@ -32,6 +32,12 @@ function check_buffs()
 	for index, buff in pairs(_ExtraData.player.buff_details) do
 		--print(buff.name, buff['full_name'] or '')
 		local this_buff = _ExtraData.player.buff_details[index]
+		if buff.id == 40 then -- Protect / Protectra (all tiers share this buff id)
+			this_buff['DEF'] = Protect_def[settings.player.protect_tier or 5] or 0
+		end
+		if buff.id == 41 then -- Shell / Shellra (all tiers share this buff id)
+			this_buff['MDT'] = Shell_mdt[settings.player.shell_tier or 5] or 0
+		end
 		if buff.id == 1 then -- weakness
 			this_buff['ma_haste'] = -1024
 		end

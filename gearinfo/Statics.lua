@@ -106,6 +106,19 @@ defaults.player.show_MA_Stuff = false
 defaults.player.show_COR_messages = true
 defaults.player.update_gs = true
 defaults.player.rank = 1
+
+-- Protect / Shell tier. The buff packet carries only the buff id (40 / 41), not which
+-- tier landed, so the tier is a user setting. Change with '//gi protect #' / '//gi shell #'.
+defaults.player.protect_tier = 5
+defaults.player.shell_tier = 5
+
+-- Protect: flat DEF by tier (BGWiki-verified 2026-09-12).
+Protect_def = { [1] = 20, [2] = 50, [3] = 90, [4] = 140, [5] = 220 }
+
+-- Shell: magic damage taken reduction by tier, as whole percent
+-- (BGWiki-verified 2026-09-12: -27/256 = -11%, -42/256 = -16%, -56/256 = -22%,
+--  -67/256 = -26%, -75/256 = -29%). Stored negative to match gear DT convention.
+Shell_mdt = { [1] = -11, [2] = -16, [3] = -22, [4] = -26, [5] = -29 }
 defaults.Bards = {}
 defaults.Cors = {}
 defaults.Cors['qultada'] = 0

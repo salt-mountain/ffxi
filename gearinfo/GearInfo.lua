@@ -214,6 +214,22 @@ windower.register_event('addon command', function(command, ...)
 			end
 			log('Auto update Gearswap = '..tostring(settings.player.update_gs))
 			settings:save('all')
+		elseif command:lower() == 'protect' then
+			if type(tonumber(args[1])) == 'number' and Protect_def[math.floor(tonumber(args[1]))] then
+				settings.player.protect_tier = math.floor(tonumber(args[1]))
+				settings:save('all')
+				log('Protect tier set to ' .. settings.player.protect_tier .. ' (DEF +' .. Protect_def[settings.player.protect_tier] .. ').')
+			else
+				log('Protect tier is ' .. (settings.player.protect_tier or 5) .. ' (DEF +' .. (Protect_def[settings.player.protect_tier or 5]) .. '). Use 1-5.')
+			end
+		elseif command:lower() == 'shell' then
+			if type(tonumber(args[1])) == 'number' and Shell_mdt[math.floor(tonumber(args[1]))] then
+				settings.player.shell_tier = math.floor(tonumber(args[1]))
+				settings:save('all')
+				log('Shell tier set to ' .. settings.player.shell_tier .. ' (MDT ' .. Shell_mdt[settings.player.shell_tier] .. '%).')
+			else
+				log('Shell tier is ' .. (settings.player.shell_tier or 5) .. ' (MDT ' .. (Shell_mdt[settings.player.shell_tier or 5]) .. '%). Use 1-5.')
+			end
 		elseif command:lower() == 'brd' then
 			if type(tonumber(args[1])) == 'number' then
 				manual_bard_duration_bonus = tonumber(args[1])
@@ -775,75 +791,96 @@ function update()
 		-------------------------------------------------------------- DT stuff ---------------------------------------------------------------
 		
 		if settings.player.show_dt_Stuff == true then
+			-- Gear + buff totals. Buffs reach these via Buffs_inform (Shell -> MDT, and any
+			-- future defensive buff), mirroring how the Haste block above combines the two.
+			local t_DT   = Gear_info['DT']   + (Buffs_inform['DT']   or 0)
+			local t_PDT  = Gear_info['PDT']  + (Buffs_inform['PDT']  or 0)
+			local t_MDT  = Gear_info['MDT']  + (Buffs_inform['MDT']  or 0)
+			local t_BDT  = Gear_info['BDT']  + (Buffs_inform['BDT']  or 0)
+			local t_PDT2 = Gear_info['PDT2'] + (Buffs_inform['PDT2'] or 0)
+			local t_MDT2 = Gear_info['MDT2'] + (Buffs_inform['MDT2'] or 0)
+			-- Colour is judged on GEAR ONLY, while the number shown is gear + buffs.
+			-- Red means "this stat has passed its own cap, further pieces are wasted" — that
+			-- is only true of gear. BGWiki documents Shell as additive with MDT gear inside the
+			-- TMDA term, but states no cap for TMDA itself, so we cannot say a buff pushes you
+			-- past the gear cap. Coloring on the combined total would tell you to strip MDT
+			-- gear that still has headroom.
+			local g_DT   = Gear_info['DT']
+			local g_PDT  = Gear_info['PDT']
+			local g_MDT  = Gear_info['MDT']
+			local g_BDT  = Gear_info['BDT']
+			local g_PDT2 = Gear_info['PDT2']
+			local g_MDT2 = Gear_info['MDT2']
 			if not sections.block[5]  then sections.block[5] = ImageBlock.New(6,'block','purple', 'DT', 00) end
 			if not sections.block[6]  then sections.block[6] = ImageBlock.New(7,'block','purple', 'PDT', 00) end
 			if not sections.block[7]  then sections.block[7] = ImageBlock.New(8,'block','purple', 'MDT', 00) end
 			if not sections.block[8]  then sections.block[8] = ImageBlock.New(9,'block','purple', 'BDT', 00) end
 			
-			local dt = (Gear_info['DT']*(-1))
+			local dt = (t_DT*(-1))
 			if dt == -0 then dt = 0 end
 			windower.text.set_text(sections.block[5].text[2].name, dt)
-			if Gear_info['DT'] < (-51) then
+			if g_DT < (-50) then
 				windower.text.set_color(sections.block[5].text[2].name, 255, 255, 0, 0)
 			else
 				windower.text.set_color(sections.block[5].text[2].name, 255, 255, 255, 255)
 			end
 			
-			if Gear_info['PDT2'] < 0 then
-				local combined_pdt = (Gear_info['PDT'] + Gear_info['DT'] + Gear_info['PDT2']) * (-1)
-				if (-50 + Gear_info['PDT2']) < -87.6 then 
-					cap = -87.6 
+			if t_PDT2 < 0 then
+				local cap = 0
+				local combined_pdt = (t_PDT + t_DT + t_PDT2) * (-1)
+				if (-50 + g_PDT2) < -87.5 then 
+					cap = -87.5 
 				else 
-					cap = (-50 + Gear_info['PDT2']) 
+					cap = (-50 + g_PDT2) 
 				end
 				if combined_pdt == -0 then combined_pdt = 0 end
 				windower.text.set_text(sections.block[6].text[2].name, combined_pdt)
-				if (Gear_info['PDT'] + Gear_info['DT'] + Gear_info['PDT2']) < cap then
+				if (g_PDT + g_DT + g_PDT2) < cap then
 					windower.text.set_color(sections.block[6].text[2].name, 255, 255, 0, 0)
 				else
 					windower.text.set_color(sections.block[6].text[2].name, 255, 255, 255, 255)
 				end
-			elseif Gear_info['PDT2'] == 0 then
-				local pdt = (Gear_info['PDT'] + Gear_info['DT'])*(-1)
+			elseif t_PDT2 == 0 then
+				local pdt = (t_PDT + t_DT)*(-1)
 				if pdt == -0 then pdt = 0 end
 				windower.text.set_text(sections.block[6].text[2].name, pdt)
-				if (Gear_info['PDT']+ Gear_info['DT']) < -51 then
+				if (g_PDT+ g_DT) < -50 then
 					windower.text.set_color(sections.block[6].text[2].name, 255, 255, 0, 0)
 				else
 					windower.text.set_color(sections.block[6].text[2].name, 255, 255, 255, 255)
 				end
 			end
 			
-			if Gear_info['MDT2'] < 0 then
-				local combined_mdt = (Gear_info['MDT'] + Gear_info['DT'] + Gear_info['MDT2'])*(-1)
+			if t_MDT2 < 0 then
+				local combined_mdt = (t_MDT + t_DT + t_MDT2)*(-1)
 				local cap = 0
-				if (-50 + Gear_info['MDT2']) < -87.6 then 
-					cap = -87.6 
+				if (-50 + g_MDT2) < -87.5 then 
+					cap = -87.5 
 				else 
-					cap = (-50 + Gear_info['MDT2']) 
+					cap = (-50 + g_MDT2) 
 				end
 				if combined_mdt == -0 then combined_mdt = 0 end
 				windower.text.set_text(sections.block[7].text[2].name, combined_mdt)
-				if (Gear_info['MDT'] + Gear_info['DT'] + Gear_info['MDT2']) < cap then
+				if (g_MDT + g_DT + g_MDT2) < cap then
 					windower.text.set_color(sections.block[7].text[2].name, 255, 255, 0, 0)
 				else
 					windower.text.set_color(sections.block[7].text[2].name, 255, 255, 255, 255)
 				end
-			elseif Gear_info['MDT2'] == 0 then
-				local mdt = (Gear_info['MDT'] + Gear_info['DT'])*(-1)
+			elseif t_MDT2 == 0 then
+				local mdt = (t_MDT + t_DT)*(-1)
 				if mdt == -0 then mdt = 0 end
 				windower.text.set_text(sections.block[7].text[2].name, mdt)
-				if (Gear_info['MDT']+ Gear_info['DT']) < -51 then
+				if (g_MDT+ g_DT) < -50 then
 					windower.text.set_color(sections.block[7].text[2].name, 255, 255, 0, 0)
 				else
 					windower.text.set_color(sections.block[7].text[2].name, 255, 255, 255, 255)
 				end
 			end
 			
-			local bdt = (Gear_info['BDT'] + Gear_info['DT'])*(-1)
+			local bdt = (t_BDT + t_DT)*(-1)
 			if bdt == -0 then bdt = 0 end
 			windower.text.set_text(sections.block[8].text[2].name, bdt)
-			if (Gear_info['BDT'] + Gear_info['DT']) < -51 then
+			if (g_BDT + g_DT) < -50 then
 				windower.text.set_color(sections.block[8].text[2].name, 255, 255, 0, 0)
 			else
 				windower.text.set_color(sections.block[8].text[2].name, 255, 255, 255, 255)
